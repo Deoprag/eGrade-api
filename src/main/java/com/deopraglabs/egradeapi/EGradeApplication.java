@@ -1,13 +1,13 @@
-package com.deopraglabs.egrade;
+package com.deopraglabs.egradeapi;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class EgradeApplication {
+public class EGradeApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(EgradeApplication.class, args);
+		SpringApplication.run(EGradeApplication.class, args);
 	}
 
 }
