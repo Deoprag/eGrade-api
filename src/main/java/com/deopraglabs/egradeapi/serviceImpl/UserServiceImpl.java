@@ -35,14 +35,17 @@ public class UserServiceImpl implements UserService{
         user.setPassword(EGradeUtils.hashPassword(requestMap.get("password")));
         return user;
     }
-
+    
     public ResponseEntity<String> save(Map<String, String> requestMap) {
         log.info("Registering user {}");
         try {
             userRepository.save(getUserFromMap(requestMap));
+            return EGradeUtils.getResponseEntity(Constants.SUCCESS, HttpStatus.OK);
         } catch (ParseException e) {
             e.printStackTrace();
         }
         return EGradeUtils.getResponseEntity(Constants.SOMETHING_WENT_WRONG, HttpStatus.INTERNAL_SERVER_ERROR);
     }
+
+    
 }
