@@ -3,10 +3,12 @@ package com.deopraglabs.egradeapi.serviceImpl;
 import java.text.ParseException;
 import java.util.Map;
 
+import org.apache.catalina.connector.Request;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestClient.ResponseSpec;
 
 import com.deopraglabs.egradeapi.model.Role;
 import com.deopraglabs.egradeapi.model.User;
@@ -24,6 +26,30 @@ public class UserServiceImpl implements UserService{
     @Autowired
     UserRepository userRepository; 
 
+    public ResponseEntity<String> save(Map<String, String> requestMap) {
+        log.info("Registering user {}");
+        try {
+            userRepository.save(getUserFromMap(requestMap));
+            return EGradeUtils.getResponseEntity(Constants.SUCCESS, HttpStatus.OK);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return EGradeUtils.getResponseEntity(Constants.SOMETHING_WENT_WRONG, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+    
+    public ResponseEntity<String> login(Map<String, String> requestMap) {
+        log.info("Logging in user {}");
+        User user = userRepository.findByCpf(requestMap.get("cpf"));
+        if(user != null) {
+            if(EGradeUtils.hashPassword(requestMap.get("password")).equals(user.getPassword())) {
+                return EGradeUtils.getResponseEntity(Constants.SUCCESS, HttpStatus.OK);
+            } else {
+                return EGradeUtils.getResponseEntity(Constants.INVALID_DATA, HttpStatus.UNAUTHORIZED);
+            }
+        }
+        return EGradeUtils.getResponseEntity(Constants.SOMETHING_WENT_WRONG, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
     private User getUserFromMap(Map<String, String> requestMap) throws ParseException {
         User user = new User();
         user.setName(requestMap.get("name"));
@@ -35,17 +61,4 @@ public class UserServiceImpl implements UserService{
         user.setPassword(EGradeUtils.hashPassword(requestMap.get("password")));
         return user;
     }
-    
-    public ResponseEntity<String> save(Map<String, String> requestMap) {
-        log.info("Registering user {}");
-        try {
-            userRepository.save(getUserFromMap(requestMap));
-            return EGradeUtils.getResponseEntity(Constants.SUCCESS, HttpStatus.OK);
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-        return EGradeUtils.getResponseEntity(Constants.SOMETHING_WENT_WRONG, HttpStatus.INTERNAL_SERVER_ERROR);
-    }
-
-    
 }
