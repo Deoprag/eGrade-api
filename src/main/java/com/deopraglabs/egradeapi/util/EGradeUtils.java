@@ -24,6 +24,7 @@ import java.util.Random;
 import javax.sql.rowset.serial.SerialBlob;
 
 import com.deopraglabs.egradeapi.model.Role;
+import com.deopraglabs.egradeapi.repository.CoordinatorRepository;
 import com.deopraglabs.egradeapi.repository.ProfessorRepository;
 import com.deopraglabs.egradeapi.repository.StudentRepository;
 import lombok.experimental.UtilityClass;
@@ -36,10 +37,13 @@ import org.springframework.stereotype.Service;
 public class EGradeUtils {
 
     @Autowired
-    ProfessorRepository teacherRepo;
+    static ProfessorRepository teacherRepo;
 
     @Autowired
-    StudentRepository studentRepo;
+    static StudentRepository studentRepo;
+
+    @Autowired
+    static CoordinatorRepository coordinatorRepo;
 
     public static String formatCpf(String oldCpf) {
         return String.format(oldCpf, oldCpf.substring(0, 2) + "." + oldCpf.substring(3, 5) + "." + oldCpf.substring(6, 8) + "-" + oldCpf.substring(9, 10));
@@ -49,9 +53,9 @@ public class EGradeUtils {
         if (teacherRepo.findByCpf(cpf) != null) {
             return Role.PROFESSOR;
         } else if (studentRepo.findByCpf(cpf) != null) {
-            return Role.STUDENT;
+            return Role.ALUNO;
         } else if (coordinatorRepo.findByCpf(cpf) != null) {
-            return Role.COORDINATOR;
+            return Role.COORDENADOR;
         }
         return null;
     }

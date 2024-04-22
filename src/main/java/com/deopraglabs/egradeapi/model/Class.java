@@ -1,20 +1,22 @@
 package com.deopraglabs.egradeapi.model;
 
-import java.io.Serializable;
-import java.util.List;
-
 import jakarta.persistence.*;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 
-import lombok.Data;
+import java.io.Serializable;
+import java.util.List;
+import java.util.Set;
 
-@Entity
 @Data
+@EqualsAndHashCode(callSuper=false)
 @DynamicInsert
 @DynamicUpdate
-@Table(name = "course")
-public class Course implements Serializable {
+@Entity
+@Table(name = "class")
+public class Class implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -26,19 +28,11 @@ public class Course implements Serializable {
     @Column(name = "name", nullable = false)
     private String name;
 
-    @Column(name = "description", nullable = false)
-    private String description;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "coordinator_id")
-    private Coordinator coordinator;
-
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "class_course",
-            joinColumns = @JoinColumn(name = "course_id"),
-            inverseJoinColumns = @JoinColumn(name = "class_id")
+            joinColumns = @JoinColumn(name = "class_id"),
+            inverseJoinColumns = @JoinColumn(name = "course_id")
     )
-    private List<Class> classes;
-
+    private Set<Course> courses;
 }

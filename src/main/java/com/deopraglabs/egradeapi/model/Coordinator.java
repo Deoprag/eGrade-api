@@ -17,6 +17,8 @@ import java.util.List;
 @Table(name = "coordinator")
 public class Coordinator extends User {
 
+        private static final long serialVersionUID = 1L;
+
         @Id
         @Column(name = "id")
         @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -25,6 +27,6 @@ public class Coordinator extends User {
         @Transient
         private Role role = Role.COORDENADOR;
 
-        @OneToMany(mappedBy = "coordinator", cascade = CascadeType.ALL, orphanRemoval = true)
+        @OneToMany(mappedBy = "coordinator", fetch = FetchType.LAZY)
         private List<Course> courses;
 }

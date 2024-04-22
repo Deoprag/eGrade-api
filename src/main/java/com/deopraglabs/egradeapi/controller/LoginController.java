@@ -5,9 +5,12 @@ import java.util.Map;
 import java.util.Objects;
 
 import com.deopraglabs.egradeapi.model.Professor;
-import com.deopraglabs.egradeapi.model.Role;
+import com.deopraglabs.egradeapi.repository.CoordinatorRepository;
 import com.deopraglabs.egradeapi.repository.ProfessorRepository;
+import com.deopraglabs.egradeapi.repository.StudentRepository;
 import com.deopraglabs.egradeapi.service.ProfessorService;
+import com.deopraglabs.egradeapi.service.StudentService;
+import com.deopraglabs.egradeapi.service.CoordinatorService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -29,17 +32,33 @@ public class LoginController {
     @Autowired
     ProfessorRepository professorRepository;
 
+    @Autowired
+    StudentService studentService;
+
+    @Autowired
+    StudentRepository studentRepository;
+
+    @Autowired
+    CoordinatorService coordinatorService;
+
+    @Autowired
+    CoordinatorRepository coordinatorRepository;
+
     @PostMapping("")
     public ResponseEntity<?> login(@RequestBody() Map<String, String> requestMap) {
         try {
-            return switch (Objects.requireNonNull(EGradeUtils.getRole(requestMap.get("cpf")))) {
-                case Role.PROFESSOR -> professorService.login(requestMap);
-                case Role.ALUNO -> studentService.login(requestMap);
-                case Role.COORDENADOR -> coordinatorService.login(requestMap);
-                default -> new ResponseEntity<>(Constants.SOMETHING_WENT_WRONG, HttpStatus.INTERNAL_SERVER_ERROR);
-            };
+            if(!Objects.isNull(professorRepository.findByCpf(requestMap.get("cpf")))) {
+                return professorService.login(requestMap);
+            } else if (!Objects.isNull(studentRepository.findByCpf(requestMap.get("cpf")))) {
+                return studentService.login(requestMap);
+            } else if (!Objects.isNull(coordinatorRepository.findByCpf(requestMap.get("cpf")))) {
+                return coordinatorService.login(requestMap);
+            } else {
+                return new ResponseEntity<>(Constants.INVALID_DATA, HttpStatus.NOT_FOUND);
+            }
+
         } catch (Exception e) {
-            return new ResponseEntity<>(new Professor(), HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(Constants.SOMETHING_WENT_WRONG, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
