@@ -23,14 +23,39 @@ import java.util.Random;
 
 import javax.sql.rowset.serial.SerialBlob;
 
+import com.deopraglabs.egradeapi.model.Role;
+import com.deopraglabs.egradeapi.repository.ProfessorRepository;
+import com.deopraglabs.egradeapi.repository.StudentRepository;
+import lombok.experimental.UtilityClass;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Service;
 
+@Service
 public class EGradeUtils {
 
+    @Autowired
+    ProfessorRepository teacherRepo;
+
+    @Autowired
+    StudentRepository studentRepo;
+
     public static String formatCpf(String oldCpf) {
-        return String.format(oldCpf, oldCpf.substring(0, 2)+ "." +  oldCpf.substring(3, 5) + "." + oldCpf.substring(6, 8) + "-" +  oldCpf.substring(9, 10));
+        return String.format(oldCpf, oldCpf.substring(0, 2) + "." + oldCpf.substring(3, 5) + "." + oldCpf.substring(6, 8) + "-" + oldCpf.substring(9, 10));
     }
+
+    public static Role getRole(String cpf) {
+        if (teacherRepo.findByCpf(cpf) != null) {
+            return Role.PROFESSOR;
+        } else if (studentRepo.findByCpf(cpf) != null) {
+            return Role.STUDENT;
+        } else if (coordinatorRepo.findByCpf(cpf) != null) {
+            return Role.COORDINATOR;
+        }
+        return null;
+    }
+
     public static String hashPassword(String password) {
         try {
             MessageDigest digest = MessageDigest.getInstance("SHA-256");
@@ -66,8 +91,8 @@ public class EGradeUtils {
         try {
             byte[] bytes = new byte[imageFis.available()];
             imageFis.read(bytes);
-           Blob image = new SerialBlob(bytes);
-           return image;
+            Blob image = new SerialBlob(bytes);
+            return image;
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -98,13 +123,13 @@ public class EGradeUtils {
         SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
         return formatter.parse(stringDate);
     }
-    
+
     public static LocalDateTime stringToLocalDateTime(String stringLocalDateTime) throws ParseException {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSSX");
         LocalDateTime localDateTime = LocalDateTime.parse(stringLocalDateTime, formatter);
         return localDateTime;
     }
-    
+
     public static LocalTime stringToLocalTime(String stringLocalTime) throws ParseException {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm:ss.SSS");
         LocalTime localTime = LocalTime.parse(stringLocalTime, formatter);
@@ -121,28 +146,28 @@ public class EGradeUtils {
         if (cpf == null || cpf.length() != 11 || cpf.matches("^(\\d)\\1*$")) {
             return false;
         }
-    
+
         int[] pesosDigito1 = {10, 9, 8, 7, 6, 5, 4, 3, 2};
         int[] pesosDigito2 = {11, 10, 9, 8, 7, 6, 5, 4, 3, 2};
-    
+
         int soma = 0;
         for (int i = 0; i < 9; i++) {
             int digito = Character.getNumericValue(cpf.charAt(i));
             soma += digito * pesosDigito1[i];
         }
-    
+
         int resto = soma % 11;
         int digito1 = (resto < 2) ? 0 : (11 - resto);
-    
+
         soma = 0;
         for (int i = 0; i < 10; i++) {
             int digito = Character.getNumericValue(cpf.charAt(i));
             soma += digito * pesosDigito2[i];
         }
-    
+
         resto = soma % 11;
         int digito2 = (resto < 2) ? 0 : (11 - resto);
-    
+
         return (digito1 == Character.getNumericValue(cpf.charAt(9)) && digito2 == Character.getNumericValue(cpf.charAt(10)));
-    }   
+    }
 }

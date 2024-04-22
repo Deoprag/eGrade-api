@@ -8,23 +8,34 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import com.deopraglabs.egradeapi.model.Professor;
-import com.deopraglabs.egradeapi.service.TeacherService;
+import com.deopraglabs.egradeapi.service.ProfessorService;
 import com.deopraglabs.egradeapi.util.Constants;
 import com.deopraglabs.egradeapi.util.EGradeUtils;
 
 
 @RestController
-@RequestMapping("/api/v1/teacher")
-public class TeacherController {
+@RequestMapping("/api/v1/professor")
+public class ProfessorController {
 
     @Autowired
-    TeacherService teacherService;
+    ProfessorService teacherService;
 
     @PostMapping("/save")
-    public ResponseEntity<String> signUp(@RequestBody(required = true) Map<String, String> requestMap) {
+    public ResponseEntity<String> signUp(@RequestBody() Map<String, String> requestMap) {
         try {
             return teacherService.save(requestMap);
         } catch (Exception e) {
+            e.printStackTrace();
+            return EGradeUtils.getResponseEntity(Constants.SOMETHING_WENT_WRONG, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @PutMapping("/update")
+    public ResponseEntity<String> update(@RequestBody() Map<String, String> requestMap) {
+        try {
+            return teacherService.update(requestMap);
+        } catch (Exception e) {
+            e.printStackTrace();
             return EGradeUtils.getResponseEntity(Constants.SOMETHING_WENT_WRONG, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
@@ -34,6 +45,7 @@ public class TeacherController {
         try {
             return teacherService.delete(id);
         } catch (Exception e) {
+            e.printStackTrace();
             return EGradeUtils.getResponseEntity(Constants.SOMETHING_WENT_WRONG, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
@@ -45,7 +57,7 @@ public class TeacherController {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return new ResponseEntity<Professor>(new Professor(), HttpStatus.INTERNAL_SERVER_ERROR);
+        return new ResponseEntity<>(new Professor(), HttpStatus.INTERNAL_SERVER_ERROR);
     }
-    
+
 }

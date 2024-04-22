@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 import com.deopraglabs.egradeapi.model.Professor;
 
 @Service
-public interface TeacherService {
+public interface ProfessorService {
 
     public ResponseEntity<Professor> login(Map<String, String> requestMap);
     
@@ -17,5 +17,7 @@ public interface TeacherService {
     public ResponseEntity<String> delete(Long id);
 
     public ResponseEntity<Professor> findById(Long id);
+
+    public ResponseEntity<String> update(Map<String, String> requestMap);
 
 }

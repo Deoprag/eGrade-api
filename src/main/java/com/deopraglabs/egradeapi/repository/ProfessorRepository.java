@@ -9,7 +9,7 @@ import com.deopraglabs.egradeapi.model.Professor;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface TeacherRepository extends JpaRepository<Professor, Long> {
+public interface ProfessorRepository extends JpaRepository<Professor, Long> {
 
     public Optional<Professor> findById(Long id);
 
