@@ -1,5 +1,6 @@
 package com.deopraglabs.egradeapi.model;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.sql.Blob;
 import java.util.Date;
@@ -13,12 +14,13 @@ import lombok.Data;
 @MappedSuperclass
 public abstract class User implements Serializable {
 
+    @Serial
     private static final long serialVersionUID = 1L;
 
     @Column(name = "name", nullable = false)
     private String name;
 
-    @Column(name = "cpf", nullable = false, length = 11,  unique = true)
+    @Column(name = "cpf", nullable = false, length = 11, unique = true)
     private String cpf;
 
     @Column(name = "email", nullable = false, unique = true)

@@ -1,7 +1,6 @@
 package com.deopraglabs.egradeapi.model;
 
 import jakarta.persistence.*;
-
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.hibernate.annotations.DynamicInsert;
@@ -9,15 +8,15 @@ import org.hibernate.annotations.DynamicUpdate;
 
 import java.io.Serial;
 import java.io.Serializable;
-import java.util.List;
+import java.util.Date;
 
 @Data
 @EqualsAndHashCode(callSuper = false)
 @DynamicInsert
 @DynamicUpdate
 @Entity
-@Table(name = "student")
-public class Student extends User implements Serializable {
+@Table(name = "certificate")
+public class Certificate implements Serializable {
 
     @Serial
     private static final long serialVersionUID = 1L;
@@ -27,17 +26,16 @@ public class Student extends User implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    @Transient
-    private Role role = Role.ALUNO;
+    @Column(name = "justification", nullable = false, columnDefinition = "text")
+    private String justification;
 
-    @ManyToOne
-    @JoinColumn(name = "course_id", nullable = false)
-    private Course course;
+    @Column(name = "date", nullable = false)
+    private Date date;
 
-    @OneToMany(mappedBy = "certificate", fetch = FetchType.EAGER)
-    private List<Certificate> certificates;
+    @Column(name = "image", nullable = false, columnDefinition = "bytea")
+    private byte[] image;
 
-    @OneToMany(mappedBy = "grade", fetch = FetchType.EAGER)
-    private List<Certificate> grades;
-
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "student_id", nullable = false)
+    private Student student;
 }

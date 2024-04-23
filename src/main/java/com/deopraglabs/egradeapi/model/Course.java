@@ -1,5 +1,6 @@
 package com.deopraglabs.egradeapi.model;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.List;
 
@@ -16,12 +17,13 @@ import lombok.Data;
 @Table(name = "course")
 public class Course implements Serializable {
 
+    @Serial
     private static final long serialVersionUID = 1L;
 
     @Id
     @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private long id;
 
     @Column(name = "name", nullable = false)
     private String name;
@@ -29,16 +31,16 @@ public class Course implements Serializable {
     @Column(name = "description", nullable = false)
     private String description;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "coordinator_id")
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "coordinator_id", nullable = false)
     private Coordinator coordinator;
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
-            name = "class_course",
-            joinColumns = @JoinColumn(name = "course_id"),
+            name = "subject_course",
+            joinColumns = @JoinColumn(name = "subject_id"),
             inverseJoinColumns = @JoinColumn(name = "class_id")
     )
-    private List<Class> classes;
+    private List<Subject> subjects;
 
 }

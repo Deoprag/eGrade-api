@@ -6,33 +6,42 @@ import lombok.EqualsAndHashCode;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.List;
 import java.util.Set;
 
 @Data
-@EqualsAndHashCode(callSuper=false)
+@EqualsAndHashCode(callSuper = false)
 @DynamicInsert
 @DynamicUpdate
 @Entity
-@Table(name = "class")
-public class Class implements Serializable {
+@Table(name = "subject")
+public class Subject implements Serializable {
 
+    @Serial
     private static final long serialVersionUID = 1L;
 
     @Id
     @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private long id;
 
     @Column(name = "name", nullable = false)
     private String name;
 
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "professor_id", nullable = false)
+    private Professor professor;
+
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
-            name = "class_course",
-            joinColumns = @JoinColumn(name = "class_id"),
+            name = "subject_course",
+            joinColumns = @JoinColumn(name = "subject_id"),
             inverseJoinColumns = @JoinColumn(name = "course_id")
     )
     private Set<Course> courses;
+
+    @OneToMany(mappedBy = "grade", fetch = FetchType.EAGER)
+    private List<Certificate> grades;
 }
