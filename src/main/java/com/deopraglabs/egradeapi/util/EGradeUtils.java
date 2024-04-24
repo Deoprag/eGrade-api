@@ -34,25 +34,29 @@ import java.util.Random;
 public class EGradeUtils {
 
     @Autowired
-    static ProfessorRepository teacherRepo;
+    ProfessorRepository teacherRepo;
 
     @Autowired
-    static StudentRepository studentRepo;
+    StudentRepository studentRepo;
 
     @Autowired
-    static CoordinatorRepository coordinatorRepo;
+    CoordinatorRepository coordinatorRepo;
 
     public static String formatCpf(String oldCpf) {
         return String.format(oldCpf, oldCpf.substring(0, 2) + "." + oldCpf.substring(3, 5) + "." + oldCpf.substring(6, 8) + "-" + oldCpf.charAt(9));
     }
 
-    public static Role getRole(String cpf) {
-        if (teacherRepo.findByCpf(cpf) != null) {
-            return Role.PROFESSOR;
-        } else if (studentRepo.findByCpf(cpf) != null) {
-            return Role.ALUNO;
-        } else if (coordinatorRepo.findByCpf(cpf) != null) {
-            return Role.COORDENADOR;
+    public Role getRole(String cpf) {
+        try {
+            if (teacherRepo.findByCpf(cpf) != null) {
+                return Role.PROFESSOR;
+            } else if (studentRepo.findByCpf(cpf) != null) {
+                return Role.ALUNO;
+            } else if (coordinatorRepo.findByCpf(cpf) != null) {
+                return Role.COORDENADOR;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
         return Role.NONE;
     }

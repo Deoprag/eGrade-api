@@ -12,6 +12,8 @@ import com.deopraglabs.egradeapi.repository.StudentRepository;
 import com.deopraglabs.egradeapi.service.ProfessorService;
 import com.deopraglabs.egradeapi.service.StudentService;
 import com.deopraglabs.egradeapi.service.CoordinatorService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -27,6 +29,7 @@ import com.deopraglabs.egradeapi.util.EGradeUtils;
 @RequestMapping("/api/v1/login")
 public class LoginController {
 
+    private static final Logger log = LoggerFactory.getLogger(LoginController.class);
     @Autowired
     ProfessorService professorService;
 
@@ -45,11 +48,13 @@ public class LoginController {
     @Autowired
     CoordinatorRepository coordinatorRepository;
 
+    @Autowired
+    EGradeUtils eGradeUtils;
+
     @PostMapping("")
     public ResponseEntity<?> login(@RequestBody() Map<String, String> requestMap) {
         try {
-            Role role = EGradeUtils.getRole(requestMap.get("cpf"));
-
+            Role role = eGradeUtils.getRole(requestMap.get("cpf"));
             return switch (role) {
                 case PROFESSOR -> professorService.login(requestMap);
                 case ALUNO -> studentService.login(requestMap);
@@ -64,7 +69,7 @@ public class LoginController {
     @PostMapping("/register")
     public ResponseEntity<String> register() {
         try {
-            for (int i = 1000001; i < 2000011; i++) {
+            for (int i = 1000001; i < 1000011; i++) {
                 Professor professor = new Professor();
                 professor.setName("Professor " + i);
                 professor.setCpf("1234" + i);
