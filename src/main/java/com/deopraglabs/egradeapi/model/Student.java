@@ -34,10 +34,10 @@ public class Student extends User implements Serializable {
     @JoinColumn(name = "course_id", nullable = false)
     private Course course;
 
-    @OneToMany(mappedBy = "certificate", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "student", fetch = FetchType.EAGER)
     private List<Certificate> certificates;
 
-    @OneToMany(mappedBy = "grade", fetch = FetchType.EAGER)
-    private List<Certificate> grades;
+    @OneToMany(mappedBy = "student", fetch = FetchType.EAGER)
+    private List<Grade> grades;
 
 }

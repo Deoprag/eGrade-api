@@ -42,6 +42,6 @@ public class Subject implements Serializable {
     )
     private Set<Course> courses;
 
-    @OneToMany(mappedBy = "grade", fetch = FetchType.EAGER)
-    private List<Certificate> grades;
+    @OneToMany(mappedBy = "subject", fetch = FetchType.EAGER)
+    private List<Grade> grades;
 }

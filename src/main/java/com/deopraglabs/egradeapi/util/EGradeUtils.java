@@ -1,5 +1,15 @@
 package com.deopraglabs.egradeapi.util;
 
+import com.deopraglabs.egradeapi.model.Role;
+import com.deopraglabs.egradeapi.repository.CoordinatorRepository;
+import com.deopraglabs.egradeapi.repository.ProfessorRepository;
+import com.deopraglabs.egradeapi.repository.StudentRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Service;
+
+import javax.sql.rowset.serial.SerialBlob;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -14,24 +24,11 @@ import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.time.Period;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.Base64;
 import java.util.Date;
 import java.util.Random;
-
-import javax.sql.rowset.serial.SerialBlob;
-
-import com.deopraglabs.egradeapi.model.Role;
-import com.deopraglabs.egradeapi.repository.CoordinatorRepository;
-import com.deopraglabs.egradeapi.repository.ProfessorRepository;
-import com.deopraglabs.egradeapi.repository.StudentRepository;
-import lombok.experimental.UtilityClass;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Service;
 
 @Service
 public class EGradeUtils {
@@ -46,7 +43,7 @@ public class EGradeUtils {
     static CoordinatorRepository coordinatorRepo;
 
     public static String formatCpf(String oldCpf) {
-        return String.format(oldCpf, oldCpf.substring(0, 2) + "." + oldCpf.substring(3, 5) + "." + oldCpf.substring(6, 8) + "-" + oldCpf.substring(9, 10));
+        return String.format(oldCpf, oldCpf.substring(0, 2) + "." + oldCpf.substring(3, 5) + "." + oldCpf.substring(6, 8) + "-" + oldCpf.charAt(9));
     }
 
     public static Role getRole(String cpf) {
@@ -57,12 +54,12 @@ public class EGradeUtils {
         } else if (coordinatorRepo.findByCpf(cpf) != null) {
             return Role.COORDENADOR;
         }
-        return null;
+        return Role.NONE;
     }
 
     public static String hashPassword(String password) {
         try {
-            MessageDigest digest = MessageDigest.getInstance("SHA-256");
+            final MessageDigest digest = MessageDigest.getInstance("SHA-256");
             byte[] hash = digest.digest(password.getBytes(StandardCharsets.UTF_8));
             return Base64.getEncoder().encodeToString(hash);
         } catch (NoSuchAlgorithmException e) {
@@ -72,7 +69,7 @@ public class EGradeUtils {
     }
 
     public static boolean verifyPassword(String plainPassword, String hashedPassword) {
-        String hashedPlainPassword = hashPassword(plainPassword);
+        final String hashedPlainPassword = hashPassword(plainPassword);
         return hashedPlainPassword.equals(hashedPassword);
     }
 
@@ -81,7 +78,7 @@ public class EGradeUtils {
     }
 
     public static String generateCode() {
-        StringBuilder code = new StringBuilder();
+        final StringBuilder code = new StringBuilder();
         int i = 0;
         while (i < 4) {
             Random rand = new Random();
@@ -95,7 +92,7 @@ public class EGradeUtils {
         try {
             byte[] bytes = new byte[imageFis.available()];
             imageFis.read(bytes);
-            Blob image = new SerialBlob(bytes);
+            final Blob image = new SerialBlob(bytes);
             return image;
         } catch (Exception e) {
             e.printStackTrace();
@@ -104,9 +101,9 @@ public class EGradeUtils {
     }
 
     public static FileInputStream convertFromBlob(Blob image) throws Exception {
-        File tempFile = File.createTempFile("tempfile", null);
+        final File tempFile = File.createTempFile("tempfile", null);
         try (InputStream inputStream = image.getBinaryStream();
-             FileOutputStream outputStream = new FileOutputStream(tempFile)) {
+            final FileOutputStream outputStream = new FileOutputStream(tempFile)) {
             byte[] buffer = new byte[4096];
             int bytesRead = -1;
             while ((bytesRead = inputStream.read(buffer)) != -1) {
@@ -124,27 +121,21 @@ public class EGradeUtils {
     }
 
     public static Date stringToDate(String stringDate) throws ParseException {
-        SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
+        final SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
         return formatter.parse(stringDate);
     }
 
     public static LocalDateTime stringToLocalDateTime(String stringLocalDateTime) throws ParseException {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSSX");
-        LocalDateTime localDateTime = LocalDateTime.parse(stringLocalDateTime, formatter);
+        final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSSX");
+        final LocalDateTime localDateTime = LocalDateTime.parse(stringLocalDateTime, formatter);
         return localDateTime;
     }
 
     public static LocalTime stringToLocalTime(String stringLocalTime) throws ParseException {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm:ss.SSS");
-        LocalTime localTime = LocalTime.parse(stringLocalTime, formatter);
+        final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm:ss.SSS");
+        final LocalTime localTime = LocalTime.parse(stringLocalTime, formatter);
         return localTime;
     }
-
-    public static boolean isOverage(LocalDate birthDate) {
-        Period period = Period.between(birthDate, LocalDate.now());
-        return period.getYears() >= 18;
-    }
-
 
     public static boolean isCpf(String cpf) {
         if (cpf == null || cpf.length() != 11 || cpf.matches("^(\\d)\\1*$")) {

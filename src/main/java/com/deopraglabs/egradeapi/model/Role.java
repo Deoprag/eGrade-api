@@ -3,5 +3,6 @@ package com.deopraglabs.egradeapi.model;
 public enum Role {
     COORDENADOR,
     PROFESSOR,
-    ALUNO
+    ALUNO,
+    NONE
 }

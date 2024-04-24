@@ -1,6 +1,5 @@
 package com.deopraglabs.egradeapi.service;
 
-import java.text.ParseException;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
@@ -12,7 +11,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import com.deopraglabs.egradeapi.model.Professor;
-import com.deopraglabs.egradeapi.service.ProfessorService;
 import com.deopraglabs.egradeapi.util.Constants;
 import com.deopraglabs.egradeapi.util.EGradeUtils;
 
@@ -41,9 +39,21 @@ public class ProfessorService {
     public ResponseEntity<String> save(Map<String, String> requestMap) {
         log.info("Registering professor {}");
         try {
-            professorRepository.save(getProfessorFromMap(requestMap));
-            return EGradeUtils.getResponseEntity(Constants.SUCCESS, HttpStatus.OK);
-        } catch (ParseException e) {
+            if (Objects.isNull(professorRepository.findByCpf(requestMap.get("cpf")))) {
+                if (Objects.isNull(professorRepository.findByEmail(requestMap.get("email")))) {
+                    if (Objects.isNull(professorRepository.findByPhoneNumber(requestMap.get("phoneNumber")))) {
+                        professorRepository.save(getProfessorFromMap(requestMap));
+                        return EGradeUtils.getResponseEntity(Constants.SUCCESS, HttpStatus.OK);
+                    } else {
+                        return EGradeUtils.getResponseEntity(Constants.PHONE_NUMBER_ALREADY_EXISTS, HttpStatus.BAD_REQUEST);
+                    }
+                } else {
+                    return EGradeUtils.getResponseEntity(Constants.EMAIL_ALREADY_EXISTS, HttpStatus.BAD_REQUEST);
+                }
+            } else {
+                return EGradeUtils.getResponseEntity(Constants.CPF_ALREADY_EXISTS, HttpStatus.BAD_REQUEST);
+            }
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return EGradeUtils.getResponseEntity(Constants.SOMETHING_WENT_WRONG, HttpStatus.INTERNAL_SERVER_ERROR);
@@ -63,11 +73,14 @@ public class ProfessorService {
     public ResponseEntity<String> update(Map<String, String> requestMap) {
         log.info("Updating professor {}");
         try {
-            final Professor professor = getProfessorFromMap(requestMap);
-            professor.setId(Long.parseLong(requestMap.get("id")));
-            professorRepository.save(professor);
-            return EGradeUtils.getResponseEntity(Constants.SUCCESS, HttpStatus.OK);
-        } catch (ParseException e) {
+            final Optional<Professor> optProfessor = professorRepository.findById(Long.parseLong(requestMap.get("id")));
+            if (optProfessor.isPresent()) {
+                professorRepository.save(updateProfessorFromMap(requestMap, optProfessor.get()));
+                return EGradeUtils.getResponseEntity(Constants.SUCCESS, HttpStatus.OK);
+            } else {
+                return EGradeUtils.getResponseEntity(Constants.NOT_FOUND, HttpStatus.NOT_FOUND);
+            }
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return EGradeUtils.getResponseEntity(Constants.SOMETHING_WENT_WRONG, HttpStatus.INTERNAL_SERVER_ERROR);
@@ -88,7 +101,7 @@ public class ProfessorService {
         return new ResponseEntity<>(new Professor(), HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
-    private Professor getProfessorFromMap(Map<String, String> requestMap) throws ParseException {
+    private Professor getProfessorFromMap(Map<String, String> requestMap) throws Exception {
         Professor professor = new Professor();
         professor.setName(requestMap.get("name"));
         professor.setCpf(requestMap.get("cpf"));
@@ -97,6 +110,20 @@ public class ProfessorService {
         professor.setBirthDate(EGradeUtils.stringToDate(requestMap.get("birthDate")));
         professor.setPassword(EGradeUtils.hashPassword(requestMap.get("password")));
         professor.setActive(Boolean.parseBoolean(requestMap.get("active")));
+
+        return professor;
+    }
+
+    private Professor updateProfessorFromMap(Map<String, String> requestMap, Professor professor) throws Exception {
+        if (requestMap.get("name") != null) professor.setName(requestMap.get("name"));
+        if (requestMap.get("cpf") != null) professor.setCpf(requestMap.get("cpf"));
+        if (requestMap.get("email") != null) professor.setEmail(requestMap.get("email"));
+        if (requestMap.get("phoneNumber") != null) professor.setPhoneNumber(requestMap.get("phoneNumber"));
+        if (requestMap.get("birthDate") != null)
+            professor.setBirthDate(EGradeUtils.stringToDate(requestMap.get("birthDate")));
+        if (requestMap.get("profilePicture") != null)
+            professor.setProfilePicture(requestMap.get("profilePicture").getBytes());
+        if (requestMap.get("active") != null) professor.setActive(Boolean.parseBoolean(requestMap.get("active")));
 
         return professor;
     }

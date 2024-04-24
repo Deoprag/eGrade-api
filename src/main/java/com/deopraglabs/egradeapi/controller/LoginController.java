@@ -5,6 +5,7 @@ import java.util.Map;
 import java.util.Objects;
 
 import com.deopraglabs.egradeapi.model.Professor;
+import com.deopraglabs.egradeapi.model.Role;
 import com.deopraglabs.egradeapi.repository.CoordinatorRepository;
 import com.deopraglabs.egradeapi.repository.ProfessorRepository;
 import com.deopraglabs.egradeapi.repository.StudentRepository;
@@ -47,16 +48,14 @@ public class LoginController {
     @PostMapping("")
     public ResponseEntity<?> login(@RequestBody() Map<String, String> requestMap) {
         try {
-            if(!Objects.isNull(professorRepository.findByCpf(requestMap.get("cpf")))) {
-                return professorService.login(requestMap);
-            } else if (!Objects.isNull(studentRepository.findByCpf(requestMap.get("cpf")))) {
-                return studentService.login(requestMap);
-            } else if (!Objects.isNull(coordinatorRepository.findByCpf(requestMap.get("cpf")))) {
-                return coordinatorService.login(requestMap);
-            } else {
-                return new ResponseEntity<>(Constants.INVALID_DATA, HttpStatus.NOT_FOUND);
-            }
+            Role role = EGradeUtils.getRole(requestMap.get("cpf"));
 
+            return switch (role) {
+                case PROFESSOR -> professorService.login(requestMap);
+                case ALUNO -> studentService.login(requestMap);
+                case COORDENADOR -> coordinatorService.login(requestMap);
+                default -> new ResponseEntity<>(Constants.INVALID_DATA, HttpStatus.NOT_FOUND);
+            };
         } catch (Exception e) {
             return new ResponseEntity<>(Constants.SOMETHING_WENT_WRONG, HttpStatus.INTERNAL_SERVER_ERROR);
         }
@@ -65,12 +64,12 @@ public class LoginController {
     @PostMapping("/register")
     public ResponseEntity<String> register() {
         try {
-            for (int i = 0; i < 10; i++) {
+            for (int i = 1000001; i < 2000011; i++) {
                 Professor professor = new Professor();
                 professor.setName("Professor " + i);
-                professor.setCpf("1234567890" + i);
+                professor.setCpf("1234" + i);
                 professor.setEmail("professor" + i + "@gmail.com");
-                professor.setPhoneNumber("9876543210" + i);
+                professor.setPhoneNumber("9876" + i);
                 professor.setBirthDate(new Date());
                 professor.setPassword(EGradeUtils.hashPassword("senha" + i));
                 professor.setActive(true);

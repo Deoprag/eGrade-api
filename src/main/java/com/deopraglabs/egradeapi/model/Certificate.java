@@ -35,7 +35,7 @@ public class Certificate implements Serializable {
     @Column(name = "image", nullable = false, columnDefinition = "bytea")
     private byte[] image;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "student_id", nullable = false)
     private Student student;
 }
