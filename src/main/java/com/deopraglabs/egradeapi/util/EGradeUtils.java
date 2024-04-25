@@ -10,10 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import javax.sql.rowset.serial.SerialBlob;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.InputStream;
+import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -28,6 +25,7 @@ import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.Base64;
 import java.util.Date;
+import java.util.Objects;
 import java.util.Random;
 
 @Service
@@ -48,12 +46,12 @@ public class EGradeUtils {
 
     public Role getRole(String cpf) {
         try {
-            if (teacherRepo.findByCpf(cpf) != null) {
+            if (coordinatorRepo.findByCpf(cpf) != null) {
+                return Role.COORDENADOR;
+            } else if (teacherRepo.findByCpf(cpf) != null) {
                 return Role.PROFESSOR;
             } else if (studentRepo.findByCpf(cpf) != null) {
                 return Role.ALUNO;
-            } else if (coordinatorRepo.findByCpf(cpf) != null) {
-                return Role.COORDENADOR;
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -168,5 +166,19 @@ public class EGradeUtils {
         int digito2 = (resto < 2) ? 0 : (11 - resto);
 
         return (digito1 == Character.getNumericValue(cpf.charAt(9)) && digito2 == Character.getNumericValue(cpf.charAt(10)));
+    }
+
+    public static FileInputStream findFile(String path) throws FileNotFoundException {
+        return new FileInputStream(new File(path));
+    }
+
+    public static byte[] getProfileImage() {
+        try {
+            final FileInputStream imageFis = findFile("src/main/resources/img/user.png");
+            return imageFis.readAllBytes();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 }

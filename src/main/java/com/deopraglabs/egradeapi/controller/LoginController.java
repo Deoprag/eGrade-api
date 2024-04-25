@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.Map;
 import java.util.Objects;
 
+import com.deopraglabs.egradeapi.model.Coordinator;
 import com.deopraglabs.egradeapi.model.Professor;
 import com.deopraglabs.egradeapi.model.Role;
 import com.deopraglabs.egradeapi.repository.CoordinatorRepository;
@@ -29,7 +30,6 @@ import com.deopraglabs.egradeapi.util.EGradeUtils;
 @RequestMapping("/api/v1/login")
 public class LoginController {
 
-    private static final Logger log = LoggerFactory.getLogger(LoginController.class);
     @Autowired
     ProfessorService professorService;
 
@@ -56,9 +56,9 @@ public class LoginController {
         try {
             Role role = eGradeUtils.getRole(requestMap.get("cpf"));
             return switch (role) {
+                case COORDENADOR -> coordinatorService.login(requestMap);
                 case PROFESSOR -> professorService.login(requestMap);
                 case ALUNO -> studentService.login(requestMap);
-                case COORDENADOR -> coordinatorService.login(requestMap);
                 default -> new ResponseEntity<>(Constants.INVALID_DATA, HttpStatus.NOT_FOUND);
             };
         } catch (Exception e) {
@@ -66,10 +66,10 @@ public class LoginController {
         }
     }
 
-    @PostMapping("/register")
-    public ResponseEntity<String> register() {
+    @PostMapping("/registerProfessor")
+    public ResponseEntity<String> registerProfessor() {
         try {
-            for (int i = 1000001; i < 1000011; i++) {
+            for (int i = 1000001; i < 1000026; i++) {
                 Professor professor = new Professor();
                 professor.setName("Professor " + i);
                 professor.setCpf("1234" + i);
@@ -80,6 +80,27 @@ public class LoginController {
                 professor.setActive(true);
 
                 professorRepository.save(professor);
+            }
+            return EGradeUtils.getResponseEntity(Constants.SUCCESS, HttpStatus.OK);
+        } catch (Exception e) {
+            return EGradeUtils.getResponseEntity(Constants.SOMETHING_WENT_WRONG, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @PostMapping("/registerCoordinator")
+    public ResponseEntity<String> registerCoordinator() {
+        try {
+            for (int i = 1000001; i < 1000006; i++) {
+                Coordinator coordinator = new Coordinator();
+                coordinator.setName("Coordinator " + i);
+                coordinator.setCpf("1234" + i);
+                coordinator.setEmail("coordinator" + i + "@gmail.com");
+                coordinator.setPhoneNumber("9876" + i);
+                coordinator.setBirthDate(new Date());
+                coordinator.setPassword(EGradeUtils.hashPassword("senha" + i));
+                coordinator.setActive(true);
+
+                coordinatorRepository.save(coordinator);
             }
             return EGradeUtils.getResponseEntity(Constants.SUCCESS, HttpStatus.OK);
         } catch (Exception e) {
