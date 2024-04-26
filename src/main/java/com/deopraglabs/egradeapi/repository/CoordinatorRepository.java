@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface CoordinatorRepository extends JpaRepository<Coordinator, Long> {
-    
+
     public Optional<Coordinator> findById(Long id);
 
     public Coordinator findByEmail(String email);

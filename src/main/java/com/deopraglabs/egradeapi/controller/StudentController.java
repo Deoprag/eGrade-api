@@ -7,23 +7,23 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import com.deopraglabs.egradeapi.model.Professor;
-import com.deopraglabs.egradeapi.service.ProfessorService;
+import com.deopraglabs.egradeapi.model.Student;
+import com.deopraglabs.egradeapi.service.StudentService;
 import com.deopraglabs.egradeapi.util.Constants;
 import com.deopraglabs.egradeapi.util.EGradeUtils;
 
 
 @RestController
-@RequestMapping("/api/v1/professor")
-public class ProfessorController {
+@RequestMapping("/api/v1/student")
+public class StudentController {
 
     @Autowired
-    ProfessorService professorService;
+    StudentService studentService;
 
     @PostMapping("/save")
     public ResponseEntity<String> save(@RequestBody() Map<String, String> requestMap) {
         try {
-            return professorService.save(requestMap);
+            return studentService.save(requestMap);
         } catch (Exception e) {
             e.printStackTrace();
             return EGradeUtils.getResponseEntity(Constants.SOMETHING_WENT_WRONG, HttpStatus.INTERNAL_SERVER_ERROR);
@@ -33,7 +33,7 @@ public class ProfessorController {
     @PutMapping("/update")
     public ResponseEntity<String> update(@RequestBody() Map<String, String> requestMap) {
         try {
-            return professorService.update(requestMap);
+            return studentService.update(requestMap);
         } catch (Exception e) {
             e.printStackTrace();
             return EGradeUtils.getResponseEntity(Constants.SOMETHING_WENT_WRONG, HttpStatus.INTERNAL_SERVER_ERROR);
@@ -43,7 +43,7 @@ public class ProfessorController {
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<String> delete(@PathVariable Long id) {
         try {
-            return professorService.delete(id);
+            return studentService.delete(id);
         } catch (Exception e) {
             e.printStackTrace();
             return EGradeUtils.getResponseEntity(Constants.SOMETHING_WENT_WRONG, HttpStatus.INTERNAL_SERVER_ERROR);
@@ -51,13 +51,13 @@ public class ProfessorController {
     }
 
     @GetMapping("/findById/{id}")
-    public ResponseEntity<Professor> findById(@PathVariable Long id) {
+    public ResponseEntity<Student> findById(@PathVariable Long id) {
         try {
-            return professorService.findById(id);
+            return studentService.findById(id);
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return new ResponseEntity<>(new Professor(), HttpStatus.INTERNAL_SERVER_ERROR);
+        return new ResponseEntity<>(new Student(), HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
 }

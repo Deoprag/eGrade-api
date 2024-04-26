@@ -38,9 +38,21 @@ public class CoordinatorService {
     public ResponseEntity<String> save(Map<String, String> requestMap) {
         log.info("Registering coordinator {}");
         try {
-            coordinatorRepository.save(getCoordinatorFromMap(requestMap));
-            return EGradeUtils.getResponseEntity(Constants.SUCCESS, HttpStatus.OK);
-        } catch (ParseException e) {
+            if (Objects.isNull(coordinatorRepository.findByCpf(requestMap.get("cpf")))) {
+                if (Objects.isNull(coordinatorRepository.findByEmail(requestMap.get("email")))) {
+                    if (Objects.isNull(coordinatorRepository.findByPhoneNumber(requestMap.get("phoneNumber")))) {
+                        coordinatorRepository.save(getCoordinatorFromMap(requestMap));
+                        return EGradeUtils.getResponseEntity(Constants.SUCCESS, HttpStatus.OK);
+                    } else {
+                        return EGradeUtils.getResponseEntity(Constants.PHONE_NUMBER_ALREADY_EXISTS, HttpStatus.BAD_REQUEST);
+                    }
+                } else {
+                    return EGradeUtils.getResponseEntity(Constants.EMAIL_ALREADY_EXISTS, HttpStatus.BAD_REQUEST);
+                }
+            } else {
+                return EGradeUtils.getResponseEntity(Constants.CPF_ALREADY_EXISTS, HttpStatus.BAD_REQUEST);
+            }
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return EGradeUtils.getResponseEntity(Constants.SOMETHING_WENT_WRONG, HttpStatus.INTERNAL_SERVER_ERROR);
