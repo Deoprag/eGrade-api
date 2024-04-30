@@ -102,7 +102,8 @@ public class StudentService {
     }
 
     private Student getStudentFromMap(Map<String, String> requestMap) throws ParseException {
-        Student student = new Student();
+        final Student student = new Student();
+
         student.setName(requestMap.get("name"));
         student.setCpf(requestMap.get("cpf"));
         student.setEmail(requestMap.get("email"));

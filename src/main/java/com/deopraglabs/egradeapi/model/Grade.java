@@ -25,8 +25,12 @@ public class Grade implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    @Column(name = "grade", nullable = false)
+    @Column(name = "grade")
     private float grade;
+
+    @Column(name = "grade_type")
+    @Enumerated
+    private GradeType gradeType;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "student_id", nullable = false)

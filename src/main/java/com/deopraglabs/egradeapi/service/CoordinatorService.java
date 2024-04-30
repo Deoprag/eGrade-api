@@ -98,7 +98,8 @@ public class CoordinatorService {
     }
 
     private Coordinator getCoordinatorFromMap(Map<String, String> requestMap) throws ParseException {
-        Coordinator coordinator = new Coordinator();
+        final Coordinator coordinator = new Coordinator();
+
         coordinator.setName(requestMap.get("name"));
         coordinator.setCpf(requestMap.get("cpf"));
         coordinator.setEmail(requestMap.get("email"));

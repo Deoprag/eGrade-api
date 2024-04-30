@@ -60,7 +60,7 @@ public class ProfessorService {
     }
 
     public ResponseEntity<String> delete(Long id) {
-        log.info("Deleting teacher by id {}", id);
+        log.info("Deleting professor by id {}", id);
         try {
             professorRepository.deleteById(id);
             return EGradeUtils.getResponseEntity(Constants.SUCCESS, HttpStatus.OK);
@@ -87,7 +87,7 @@ public class ProfessorService {
     }
 
     public ResponseEntity<Professor> findById(Long id) {
-        log.info("Finding teacher by id {}", id);
+        log.info("Finding professor by id {}", id);
         try {
             final Optional<Professor> teacher = professorRepository.findById(id);
             if (teacher.isPresent()) {
@@ -102,7 +102,8 @@ public class ProfessorService {
     }
 
     private Professor getProfessorFromMap(Map<String, String> requestMap) throws Exception {
-        Professor professor = new Professor();
+        final Professor professor = new Professor();
+
         professor.setName(requestMap.get("name"));
         professor.setCpf(requestMap.get("cpf"));
         professor.setEmail(requestMap.get("email"));
