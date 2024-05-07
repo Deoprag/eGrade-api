@@ -12,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.text.ParseException;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
@@ -62,7 +63,7 @@ public class StudentService {
         return EGradeUtils.getResponseEntity(Constants.SOMETHING_WENT_WRONG, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
-    public ResponseEntity<String> delete(Long id) {
+    public ResponseEntity<String> delete(long id) {
         log.info("Deleting teacher by id {}", id);
         try {
             studentRepository.deleteById(id);
@@ -86,7 +87,7 @@ public class StudentService {
         return EGradeUtils.getResponseEntity(Constants.SOMETHING_WENT_WRONG, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
-    public ResponseEntity<Student> findById(Long id) {
+    public ResponseEntity<Student> findById(long id) {
         log.info("Finding teacher by id {}", id);
         try {
             final Optional<Student> teacher = studentRepository.findById(id);
@@ -116,5 +117,15 @@ public class StudentService {
         }
 
         return student;
+    }
+
+    public ResponseEntity<List<Student>> findAll() {
+        log.info("Finding all students");
+        try {
+            return new ResponseEntity<>(studentRepository.findAll(), HttpStatus.OK);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
     }
 }

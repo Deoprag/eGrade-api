@@ -1,5 +1,7 @@
 package com.deopraglabs.egradeapi.controller;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -58,6 +60,16 @@ public class AttendanceController {
             e.printStackTrace();
         }
         return new ResponseEntity<>(new Attendance(), HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    @GetMapping("/findByStudentId/{id}")
+    public ResponseEntity<List<Attendance>> findByStudentId(@PathVariable long id) {
+        try {
+            return attendanceService.findByStudentId(id);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return new ResponseEntity<>(new ArrayList<>(), HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
 }

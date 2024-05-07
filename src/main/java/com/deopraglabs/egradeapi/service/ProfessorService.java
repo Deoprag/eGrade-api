@@ -1,5 +1,6 @@
 package com.deopraglabs.egradeapi.service;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
@@ -59,7 +60,7 @@ public class ProfessorService {
         return EGradeUtils.getResponseEntity(Constants.SOMETHING_WENT_WRONG, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
-    public ResponseEntity<String> delete(Long id) {
+    public ResponseEntity<String> delete(long id) {
         log.info("Deleting professor by id {}", id);
         try {
             professorRepository.deleteById(id);
@@ -86,7 +87,7 @@ public class ProfessorService {
         return EGradeUtils.getResponseEntity(Constants.SOMETHING_WENT_WRONG, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
-    public ResponseEntity<Professor> findById(Long id) {
+    public ResponseEntity<Professor> findById(long id) {
         log.info("Finding professor by id {}", id);
         try {
             final Optional<Professor> teacher = professorRepository.findById(id);
@@ -127,5 +128,16 @@ public class ProfessorService {
         if (requestMap.get("active") != null) professor.setActive(Boolean.parseBoolean(requestMap.get("active")));
 
         return professor;
+    }
+
+    public ResponseEntity<List<Professor>> findAll() {
+        log.info("Finding all professors");
+        try {
+            final List<Professor> professors = professorRepository.findAll();
+            return new ResponseEntity<>(professors, HttpStatus.OK);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
     }
 }

@@ -44,7 +44,7 @@ public class GradeService {
         return EGradeUtils.getResponseEntity(Constants.SOMETHING_WENT_WRONG, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
-    public ResponseEntity<String> delete(Long id) {
+    public ResponseEntity<String> delete(long id) {
         log.info("Deleting grade by id {}", id);
         try {
             gradeRepository.deleteById(id);
@@ -68,7 +68,7 @@ public class GradeService {
         return EGradeUtils.getResponseEntity(Constants.SOMETHING_WENT_WRONG, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
-    public ResponseEntity<Grade> findById(Long id) {
+    public ResponseEntity<Grade> findById(long id) {
         log.info("Finding grade by id {}", id);
         try {
             final Optional<Grade> grade = gradeRepository.findById(id);
@@ -88,5 +88,16 @@ public class GradeService {
         grade.setGrade(Float.parseFloat(requestMap.get("grade")));
 
         return grade;
+    }
+
+    public ResponseEntity<List<Grade>> findByStudentId(long studentId) {
+        log.info("Finding grades by student id {}", studentId);
+        try {
+            final List<Grade> grades = gradeRepository.findByStudentId(studentId);
+            return new ResponseEntity<>(grades, HttpStatus.OK);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return new ResponseEntity<>(new ArrayList<>(), HttpStatus.INTERNAL_SERVER_ERROR);
     }
 }

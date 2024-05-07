@@ -11,9 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.text.ParseException;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 @Slf4j
@@ -58,7 +56,7 @@ public class CoordinatorService {
         return EGradeUtils.getResponseEntity(Constants.SOMETHING_WENT_WRONG, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
-    public ResponseEntity<String> delete(Long id) {
+    public ResponseEntity<String> delete(long id) {
         log.info("Deleting teacher by id {}", id);
         try {
             coordinatorRepository.deleteById(id);
@@ -82,7 +80,7 @@ public class CoordinatorService {
         return EGradeUtils.getResponseEntity(Constants.SOMETHING_WENT_WRONG, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
-    public ResponseEntity<Coordinator> findById(Long id) {
+    public ResponseEntity<Coordinator> findById(long id) {
         log.info("Finding teacher by id {}", id);
         try {
             final Optional<Coordinator> teacher = coordinatorRepository.findById(id);
@@ -109,5 +107,16 @@ public class CoordinatorService {
         coordinator.setActive(Boolean.parseBoolean(requestMap.get("active")));
 
         return coordinator;
+    }
+
+    public ResponseEntity<List<Coordinator>> findAll() {
+        log.info("Finding all coordinators");
+        try {
+            final List<Coordinator> coordinators = coordinatorRepository.findAll();
+            return new ResponseEntity<>(coordinators, HttpStatus.OK);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return new ResponseEntity<>(new ArrayList<>(), HttpStatus.INTERNAL_SERVER_ERROR);
     }
 }

@@ -13,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.text.ParseException;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -40,7 +41,7 @@ public class SubjectService {
         return EGradeUtils.getResponseEntity(Constants.SOMETHING_WENT_WRONG, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
-    public ResponseEntity<String> delete(Long id) {
+    public ResponseEntity<String> delete(long id) {
         log.info("Deleting subject by id {}", id);
         try {
             subjectRepository.deleteById(id);
@@ -64,7 +65,7 @@ public class SubjectService {
         return EGradeUtils.getResponseEntity(Constants.SOMETHING_WENT_WRONG, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
-    public ResponseEntity<Subject> findById(Long id) {
+    public ResponseEntity<Subject> findById(long id) {
         log.info("Finding subject by id {}", id);
         try {
             final Optional<Subject> subject = subjectRepository.findById(id);
@@ -82,5 +83,16 @@ public class SubjectService {
         subject.setProfessor(professorRepository.findById(Long.parseLong(requestMap.get("professor_id"))).get());
 
         return subject;
+    }
+
+    public ResponseEntity<List<Subject>> findByCourseId(long courseId) {
+        log.info("Finding subject by course id {}", courseId);
+        try {
+            final List<Subject> subjects = subjectRepository.findByCourseId(courseId);
+            return new ResponseEntity<>(subjects, HttpStatus.OK);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
     }
 }

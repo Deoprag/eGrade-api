@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import java.text.ParseException;
 import java.time.Instant;
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -42,7 +43,7 @@ public class AttendanceService {
         return EGradeUtils.getResponseEntity(Constants.SOMETHING_WENT_WRONG, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
-    public ResponseEntity<String> delete(Long id) {
+    public ResponseEntity<String> delete(long id) {
         log.info("Deleting attendance by id {}", id);
         try {
             attendanceRepository.deleteById(id);
@@ -66,7 +67,7 @@ public class AttendanceService {
         return EGradeUtils.getResponseEntity(Constants.SOMETHING_WENT_WRONG, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
-    public ResponseEntity<Attendance> findById(Long id) {
+    public ResponseEntity<Attendance> findById(long id) {
         log.info("Finding attendance by id {}", id);
         try {
             final Optional<Attendance> attendance = attendanceRepository.findById(id);
@@ -86,5 +87,15 @@ public class AttendanceService {
         attendance.setStudent(studentRepository.findById(Long.parseLong(requestMap.get("student_id"))).get());
 
         return attendance;
+    }
+
+    public ResponseEntity<List<Attendance>> findByStudentId(long studentId) {
+        log.info("Finding attendance by student id {}", studentId);
+        try {
+            return new ResponseEntity<>(attendanceRepository.findByStudentId(studentId), HttpStatus.OK);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
     }
 }

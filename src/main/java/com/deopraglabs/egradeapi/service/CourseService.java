@@ -40,7 +40,7 @@ public class CourseService {
         return EGradeUtils.getResponseEntity(Constants.SOMETHING_WENT_WRONG, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
-    public ResponseEntity<String> delete(Long id) {
+    public ResponseEntity<String> delete(long id) {
         log.info("Deleting course by id {}", id);
         try {
             courseRepository.deleteById(id);
@@ -64,7 +64,7 @@ public class CourseService {
         return EGradeUtils.getResponseEntity(Constants.SOMETHING_WENT_WRONG, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
-    public ResponseEntity<Course> findById(Long id) {
+    public ResponseEntity<Course> findById(long id) {
         log.info("Finding course by id {}", id);
         try {
             final Optional<Course> course = courseRepository.findById(id);
@@ -95,5 +95,15 @@ public class CourseService {
         }
 
         return subjectList;
+    }
+
+    public ResponseEntity<List<Course>> findAll() {
+        log.info("Finding all courses");
+        try {
+            return new ResponseEntity<>(courseRepository.findAll(), HttpStatus.OK);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return new ResponseEntity<>(new ArrayList<>(), HttpStatus.INTERNAL_SERVER_ERROR);
     }
 }

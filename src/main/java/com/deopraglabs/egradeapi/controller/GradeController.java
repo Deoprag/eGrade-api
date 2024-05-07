@@ -1,7 +1,10 @@
 package com.deopraglabs.egradeapi.controller;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
+import com.deopraglabs.egradeapi.model.Course;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -58,6 +61,16 @@ public class GradeController {
             e.printStackTrace();
         }
         return new ResponseEntity<>(new Grade(), HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    @GetMapping("/findByStudentId/{id}")
+    public ResponseEntity<List<Grade>> findByStudentId(@PathVariable long id) {
+        try {
+            return gradeService.findByStudentId(id);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return new ResponseEntity<>(new ArrayList<>(), HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
 }

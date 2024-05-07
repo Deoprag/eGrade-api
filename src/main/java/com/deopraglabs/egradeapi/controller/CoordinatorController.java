@@ -1,7 +1,10 @@
 package com.deopraglabs.egradeapi.controller;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
+import com.deopraglabs.egradeapi.model.Coordinator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -58,6 +61,16 @@ public class CoordinatorController {
             e.printStackTrace();
         }
         return new ResponseEntity<>(new Coordinator(), HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    @GetMapping("/findAll")
+    public ResponseEntity<List<Coordinator>> findById() {
+        try {
+            return coordinatorService.findAll();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return new ResponseEntity<>(new ArrayList<>(), HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
 }
