@@ -24,6 +24,10 @@ public abstract class User implements Serializable {
     @Column(name = "cpf", nullable = false, length = 11, unique = true)
     private String cpf;
 
+    @Enumerated(EnumType.STRING)
+    @Column(name = "gender", nullable = false)
+    private Gender gender;
+
     @Column(name = "email", nullable = false, unique = true)
     private String email;
 

@@ -1,7 +1,10 @@
 package com.deopraglabs.egradeapi.service;
 
+import com.deopraglabs.egradeapi.model.Course;
+import com.deopraglabs.egradeapi.model.Student;
 import com.deopraglabs.egradeapi.model.Subject;
 import com.deopraglabs.egradeapi.repository.CoordinatorRepository;
+import com.deopraglabs.egradeapi.repository.CourseRepository;
 import com.deopraglabs.egradeapi.repository.ProfessorRepository;
 import com.deopraglabs.egradeapi.repository.SubjectRepository;
 import com.deopraglabs.egradeapi.util.Constants;
@@ -13,6 +16,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.text.ParseException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -29,6 +33,9 @@ public class SubjectService {
 
     @Autowired
     ProfessorRepository professorRepository;
+
+    @Autowired
+    CourseRepository courseRepository;
 
     public ResponseEntity<String> save(Map<String, String> requestMap) {
         log.info("Registering subject {}");
@@ -83,16 +90,5 @@ public class SubjectService {
         subject.setProfessor(professorRepository.findById(Long.parseLong(requestMap.get("professor_id"))).get());
 
         return subject;
-    }
-
-    public ResponseEntity<List<Subject>> findByCourseId(long courseId) {
-        log.info("Finding subject by course id {}", courseId);
-        try {
-            final List<Subject> subjects = subjectRepository.findByCourseId(courseId);
-            return new ResponseEntity<>(subjects, HttpStatus.OK);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
     }
 }

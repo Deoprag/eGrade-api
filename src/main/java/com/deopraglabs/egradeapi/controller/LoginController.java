@@ -5,6 +5,7 @@ import java.util.Map;
 import java.util.Objects;
 
 import com.deopraglabs.egradeapi.model.Coordinator;
+import com.deopraglabs.egradeapi.model.Gender;
 import com.deopraglabs.egradeapi.model.Professor;
 import com.deopraglabs.egradeapi.model.Role;
 import com.deopraglabs.egradeapi.repository.CoordinatorRepository;
@@ -74,6 +75,7 @@ public class LoginController {
                 professor.setName("Professor " + i);
                 professor.setCpf("1234" + i);
                 professor.setEmail("professor" + i + "@gmail.com");
+                professor.setGender(Gender.M);
                 professor.setPhoneNumber("9876" + i);
                 professor.setBirthDate(new Date());
                 professor.setPassword(EGradeUtils.hashPassword("senha" + i));
@@ -95,6 +97,7 @@ public class LoginController {
                 coordinator.setName("Coordinator " + i);
                 coordinator.setCpf("1234" + i);
                 coordinator.setEmail("coordinator" + i + "@gmail.com");
+                coordinator.setGender(Gender.M);
                 coordinator.setPhoneNumber("9876" + i);
                 coordinator.setBirthDate(new Date());
                 coordinator.setPassword(EGradeUtils.hashPassword("senha" + i));

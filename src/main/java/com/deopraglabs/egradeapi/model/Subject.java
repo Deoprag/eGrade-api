@@ -33,14 +33,9 @@ public class Subject implements Serializable {
     @JoinColumn(name = "professor_id", nullable = false)
     private Professor professor;
 
-    @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(
-            name = "subject_course",
-            joinColumns = @JoinColumn(name = "subject_id"),
-            inverseJoinColumns = @JoinColumn(name = "course_id")
-    )
-    private Set<Course> courses;
-
     @OneToMany(mappedBy = "subject", fetch = FetchType.EAGER)
     private List<Grade> grades;
+
+    @OneToMany(mappedBy = "subject")
+    private List<SubjectCourse> subjectCourse;
 }

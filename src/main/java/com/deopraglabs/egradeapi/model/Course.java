@@ -2,6 +2,7 @@ package com.deopraglabs.egradeapi.model;
 
 import java.io.Serial;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 import jakarta.persistence.*;
@@ -25,7 +26,7 @@ public class Course implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    @Column(name = "name", nullable = false)
+    @Column(name = "name", nullable = false, unique = true)
     private String name;
 
     @Column(name = "description", nullable = false)
@@ -35,12 +36,8 @@ public class Course implements Serializable {
     @JoinColumn(name = "coordinator_id", nullable = false)
     private Coordinator coordinator;
 
-    @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(
-            name = "subject_course",
-            joinColumns = @JoinColumn(name = "subject_id"),
-            inverseJoinColumns = @JoinColumn(name = "class_id")
-    )
-    private List<Subject> subjects;
+    @ManyToMany(cascade = { CascadeType.MERGE })
+    @JoinTable(name = "subject_course", joinColumns = @JoinColumn(name = "course_id"), inverseJoinColumns = @JoinColumn(name = "subject_id"))
+    private List<Subject> subjects = new ArrayList<>();
 
 }

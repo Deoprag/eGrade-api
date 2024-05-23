@@ -2,8 +2,10 @@ package com.deopraglabs.egradeapi.service;
 
 import com.deopraglabs.egradeapi.model.Course;
 import com.deopraglabs.egradeapi.model.Subject;
+import com.deopraglabs.egradeapi.model.SubjectCourse;
 import com.deopraglabs.egradeapi.repository.CoordinatorRepository;
 import com.deopraglabs.egradeapi.repository.CourseRepository;
+import com.deopraglabs.egradeapi.repository.SubjectCourseRepository;
 import com.deopraglabs.egradeapi.repository.SubjectRepository;
 import com.deopraglabs.egradeapi.util.Constants;
 import com.deopraglabs.egradeapi.util.EGradeUtils;
@@ -28,6 +30,10 @@ public class CourseService {
 
     @Autowired
     SubjectRepository subjectRepository;
+
+    @Autowired
+    SubjectCourseRepository subjectCourseRepository;
+
 
     public ResponseEntity<String> save(Map<String, String> requestMap) {
         log.info("Registering course {}");
@@ -81,7 +87,9 @@ public class CourseService {
         course.setName(requestMap.get("name"));
         course.setDescription(requestMap.get("description"));
         course.setCoordinator(coordinatorRepository.findById(Long.parseLong(requestMap.get("coordinator_id"))).get());
-        course.setSubjects(getSubjects(requestMap.get("subjects")));
+        for (Subject subject : getSubjects(requestMap.get("subjects"))) {
+            course.getSubjects().add(subject);
+        }
 
         return course;
     }
@@ -91,7 +99,8 @@ public class CourseService {
         final String[] subjectIds = subjects.split(",");
 
         for (String subjectId : subjectIds) {
-            subjectList.add(subjectRepository.findById(Long.parseLong(subjectId)).get());
+            Optional<Subject> subject = subjectRepository.findById(Long.parseLong(subjectId));
+            subject.ifPresent(subjectList::add);
         }
 
         return subjectList;

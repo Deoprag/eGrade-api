@@ -2,6 +2,7 @@ package com.deopraglabs.egradeapi.service;
 
 import com.deopraglabs.egradeapi.model.Grade;
 import com.deopraglabs.egradeapi.model.GradeType;
+import com.deopraglabs.egradeapi.model.Student;
 import com.deopraglabs.egradeapi.model.Subject;
 import com.deopraglabs.egradeapi.repository.GradeRepository;
 import com.deopraglabs.egradeapi.repository.StudentRepository;
@@ -93,8 +94,13 @@ public class GradeService {
     public ResponseEntity<List<Grade>> findByStudentId(long studentId) {
         log.info("Finding grades by student id {}", studentId);
         try {
-            final List<Grade> grades = gradeRepository.findByStudentId(studentId);
-            return new ResponseEntity<>(grades, HttpStatus.OK);
+            final Optional<Student> student = studentRepository.findById(studentId);
+
+            if (student.isPresent()) {
+                return new ResponseEntity<>(gradeRepository.findByStudent(student.get()), HttpStatus.OK);
+            } else {
+                return new ResponseEntity<>(new ArrayList<>(), HttpStatus.BAD_REQUEST);
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }

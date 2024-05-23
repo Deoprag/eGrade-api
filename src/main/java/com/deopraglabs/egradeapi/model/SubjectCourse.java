@@ -1,0 +1,29 @@
+package com.deopraglabs.egradeapi.model;
+
+import java.io.Serial;
+import java.io.Serializable;
+import jakarta.persistence.*;
+import lombok.Data;
+import org.hibernate.annotations.DynamicInsert;
+import org.hibernate.annotations.DynamicUpdate;
+
+@Entity
+@Data
+@Table(name = "subject_course")
+public class SubjectCourse implements Serializable {
+
+    @Serial
+    private static final long serialVersionUID = 1L;
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private long id;
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "subject_id", nullable = false)
+    private Subject subject;
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "course_id", nullable = false)
+    private Course course;
+}

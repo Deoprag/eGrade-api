@@ -1,6 +1,7 @@
 package com.deopraglabs.egradeapi.service;
 
 import com.deopraglabs.egradeapi.model.Attendance;
+import com.deopraglabs.egradeapi.model.Student;
 import com.deopraglabs.egradeapi.repository.AttendanceRepository;
 import com.deopraglabs.egradeapi.repository.StudentRepository;
 import com.deopraglabs.egradeapi.repository.SubjectRepository;
@@ -14,10 +15,7 @@ import org.springframework.stereotype.Service;
 
 import java.text.ParseException;
 import java.time.Instant;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 @Slf4j
@@ -92,10 +90,16 @@ public class AttendanceService {
     public ResponseEntity<List<Attendance>> findByStudentId(long studentId) {
         log.info("Finding attendance by student id {}", studentId);
         try {
-            return new ResponseEntity<>(attendanceRepository.findByStudentId(studentId), HttpStatus.OK);
+            final Optional<Student> student = studentRepository.findById(studentId);
+
+            if (student.isPresent()) {
+                return new ResponseEntity<>(attendanceRepository.findByStudent(student.get()), HttpStatus.OK);
+            } else {
+                return new ResponseEntity<>(new ArrayList<>(), HttpStatus.BAD_REQUEST);
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        return new ResponseEntity<>(new ArrayList<>(), HttpStatus.INTERNAL_SERVER_ERROR);
     }
 }
