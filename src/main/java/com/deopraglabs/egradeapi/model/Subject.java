@@ -39,7 +39,7 @@ public class Subject implements Serializable {
             joinColumns = @JoinColumn(name = "subject_id"),
             inverseJoinColumns = @JoinColumn(name = "course_id")
     )
-    private Set<Course> courses;
+    private List<Course> courses;
 
     @OneToMany(mappedBy = "subject", fetch = FetchType.EAGER)
     private List<Grade> grades;

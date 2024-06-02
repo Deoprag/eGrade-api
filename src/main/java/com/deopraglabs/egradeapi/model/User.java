@@ -42,4 +42,7 @@ public abstract class User implements Serializable {
 
     @Column(name = "active", nullable = false)
     private boolean active = false;
+
+    @Transient
+    private Role role;
 }

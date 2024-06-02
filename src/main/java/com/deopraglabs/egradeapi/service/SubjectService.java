@@ -89,15 +89,4 @@ public class SubjectService {
 
         return subject;
     }
-
-    public ResponseEntity<List<Subject>> findByCourseId(long courseId) {
-        log.info("Finding subject by course id {}", courseId);
-        try {
-            final List<Subject> subjects = subjectRepository.findByCoursesId(courseId);
-            return new ResponseEntity<>(subjects, HttpStatus.OK);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-    }
 }
