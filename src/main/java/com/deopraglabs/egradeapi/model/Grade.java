@@ -14,7 +14,9 @@ import java.io.Serializable;
 @DynamicInsert
 @DynamicUpdate
 @Entity
-@Table(name = "grade")
+@Table(name = "grade", uniqueConstraints = {
+        @UniqueConstraint(columnNames = {"student_id", "grade_type"})
+})
 public class Grade implements Serializable {
 
     @Serial
@@ -29,7 +31,7 @@ public class Grade implements Serializable {
     private float grade;
 
     @Column(name = "grade_type")
-    @Enumerated
+    @Enumerated(EnumType.STRING)
     private GradeType gradeType;
 
     @ManyToOne(fetch = FetchType.LAZY)

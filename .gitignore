@@ -31,4 +31,9 @@ build/
 
 ### VS Code ###
 .vscode/
+<<<<<<< HEAD
 application.properties
+=======
+
+application.properties
+>>>>>>> 9cc41901688bee7ac8e47ae4d61510a17cdad275

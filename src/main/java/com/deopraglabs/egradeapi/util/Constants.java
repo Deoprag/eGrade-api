@@ -17,4 +17,7 @@ public class Constants {
     public static final String EMAIL_ALREADY_EXISTS = "Este e-mail já está sendo utilizado!";
 
     public static final String CPF_ALREADY_EXISTS = "Este CPF já está sendo utilizado!";
+
+    public static final String NAME_ALREADY_EXISTS = "Este nome já está sendo utilizado!";
+
 }

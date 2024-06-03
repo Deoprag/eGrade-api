@@ -40,8 +40,13 @@ public class SubjectService {
     public ResponseEntity<String> save(Map<String, String> requestMap) {
         log.info("Registering subject {}");
         try {
-            subjectRepository.save(getSubjectFromMap(requestMap));
-            return EGradeUtils.getResponseEntity(Constants.SUCCESS, HttpStatus.OK);
+            final Subject subject = subjectRepository.findByName(requestMap.get("name"));
+            if (subject != null) {
+                subjectRepository.save(getSubjectFromMap(requestMap));
+                return EGradeUtils.getResponseEntity(Constants.SUCCESS, HttpStatus.OK);
+            } else {
+                return EGradeUtils.getResponseEntity(Constants.NAME_ALREADY_EXISTS, HttpStatus.BAD_REQUEST);
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }

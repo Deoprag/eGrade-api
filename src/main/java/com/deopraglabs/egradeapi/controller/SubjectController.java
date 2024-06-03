@@ -62,4 +62,5 @@ public class SubjectController {
         }
         return new ResponseEntity<>(new Subject(), HttpStatus.INTERNAL_SERVER_ERROR);
     }
+
 }
