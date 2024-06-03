@@ -36,8 +36,13 @@ public class GradeService {
     public ResponseEntity<String> save(Map<String, String> requestMap) {
         log.info("Registering grade {}");
         try {
-            gradeRepository.save(getGradeFromMap(requestMap));
-            return EGradeUtils.getResponseEntity(Constants.SUCCESS, HttpStatus.OK);
+            final Grade grade = gradeRepository.findByName(requestMap.get("name"));
+            if (grade != null) {
+                gradeRepository.save(getGradeFromMap(requestMap));
+                return EGradeUtils.getResponseEntity(Constants.SUCCESS, HttpStatus.OK);
+            } else {
+                return EGradeUtils.getResponseEntity(Constants.NAME_ALREADY_EXISTS, HttpStatus.BAD_REQUEST);
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }

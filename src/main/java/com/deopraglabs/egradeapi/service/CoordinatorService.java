@@ -105,6 +105,7 @@ public class CoordinatorService {
         coordinator.setBirthDate(EGradeUtils.stringToDate(requestMap.get("birthDate")));
         coordinator.setPassword(EGradeUtils.hashPassword(requestMap.get("password")));
         coordinator.setActive(Boolean.parseBoolean(requestMap.get("active")));
+        coordinator.setProfilePicture(requestMap.get("profilePicture").getBytes());
 
         return coordinator;
     }

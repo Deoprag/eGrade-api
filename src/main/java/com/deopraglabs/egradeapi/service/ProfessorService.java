@@ -112,6 +112,7 @@ public class ProfessorService {
         professor.setBirthDate(EGradeUtils.stringToDate(requestMap.get("birthDate")));
         professor.setPassword(EGradeUtils.hashPassword(requestMap.get("password")));
         professor.setActive(Boolean.parseBoolean(requestMap.get("active")));
+        professor.setProfilePicture(requestMap.get("profilePicture").getBytes());
 
         return professor;
     }

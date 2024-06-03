@@ -39,7 +39,7 @@ public class Course implements Serializable {
     @JoinTable(
             name = "subject_course",
             joinColumns = @JoinColumn(name = "subject_id"),
-            inverseJoinColumns = @JoinColumn(name = "class_id")
+            inverseJoinColumns = @JoinColumn(name = "course_id")
     )
     private List<Subject> subjects;
 
