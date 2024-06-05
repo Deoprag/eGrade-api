@@ -38,20 +38,7 @@ public class CourseService {
     public ResponseEntity<String> save(Map<String, String> requestMap) {
         log.info("Registering course {}");
         try {
-            Course course = getCourseFromMap(requestMap);
-            course.setSubjects(null); // Set subjects to null initially
-            course = courseRepository.save(course); // Save the course first
-
-            List<Subject> subjects = getSubjects(requestMap.get("subjects")); // Get the subjects
-
-            for (Subject subject : subjects) {
-                subject.getCourses().add(course);
-                subjectRepository.save(subject); // Save each subject with the associated course
-            }
-
-            course.setSubjects(new ArrayList<>(subjects)); // Set the subjects to the course
-            course = courseRepository.save(course); // Save the course again
-
+            courseRepository.save(getCourseFromMap(requestMap)); // Save the course again
             return EGradeUtils.getResponseEntity(Constants.SUCCESS, HttpStatus.OK);
         } catch (Exception e) {
             e.printStackTrace();
