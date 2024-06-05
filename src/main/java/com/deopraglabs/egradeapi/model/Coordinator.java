@@ -28,7 +28,4 @@ public class Coordinator extends User {
 
     @Transient
     private Role role = Role.COORDENADOR;
-
-    @OneToMany(mappedBy = "coordinator", fetch = FetchType.EAGER)
-    private List<Course> courses;
 }

@@ -26,7 +26,7 @@ public abstract class User implements Serializable {
 
     @Enumerated(EnumType.STRING)
     @Column(name = "gender", nullable = false)
-    private Gender gender;
+    private Gender gender = Gender.O;
 
     @Column(name = "email", nullable = false, unique = true)
     private String email;
