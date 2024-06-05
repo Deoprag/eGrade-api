@@ -31,7 +31,7 @@ public class Grade implements Serializable {
     private float grade;
 
     @Column(name = "grade_type")
-    @Enumerated(EnumType.STRING)
+    @Enumerated
     private GradeType gradeType;
 
     @ManyToOne(fetch = FetchType.LAZY)

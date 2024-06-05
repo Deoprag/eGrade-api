@@ -1,5 +1,6 @@
 package com.deopraglabs.egradeapi.service;
 
+import com.deopraglabs.egradeapi.model.Gender;
 import com.deopraglabs.egradeapi.model.Student;
 import com.deopraglabs.egradeapi.repository.CourseRepository;
 import com.deopraglabs.egradeapi.repository.StudentRepository;
@@ -107,6 +108,7 @@ public class StudentService {
 
         student.setName(requestMap.get("name"));
         student.setCpf(requestMap.get("cpf"));
+        student.setGender(Gender.valueOf(requestMap.get("gender")));
         student.setEmail(requestMap.get("email"));
         student.setPhoneNumber(requestMap.get("phoneNumber"));
         student.setBirthDate(EGradeUtils.stringToDate(requestMap.get("birthDate")));
