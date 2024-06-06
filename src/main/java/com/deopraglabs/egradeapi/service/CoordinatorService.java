@@ -57,7 +57,7 @@ public class CoordinatorService {
     }
 
     public ResponseEntity<String> delete(long id) {
-        log.info("Deleting teacher by id {}", id);
+        log.info("Deleting coordinator by id {}", id);
         try {
             coordinatorRepository.deleteById(id);
             return EGradeUtils.getResponseEntity(Constants.SUCCESS, HttpStatus.OK);
@@ -81,7 +81,7 @@ public class CoordinatorService {
     }
 
     public ResponseEntity<Coordinator> findById(long id) {
-        log.info("Finding teacher by id {}", id);
+        log.info("Finding coordinator by id {}", id);
         try {
             final Optional<Coordinator> teacher = coordinatorRepository.findById(id);
             if (teacher.isPresent()) {

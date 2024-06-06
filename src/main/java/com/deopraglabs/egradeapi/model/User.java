@@ -2,10 +2,8 @@ package com.deopraglabs.egradeapi.model;
 
 import java.io.Serial;
 import java.io.Serializable;
-import java.sql.Blob;
 import java.util.Date;
 
-import com.deopraglabs.egradeapi.util.EGradeUtils;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.*;
