@@ -1,5 +1,6 @@
 package com.deopraglabs.egradeapi.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -33,9 +34,11 @@ public class Subject implements Serializable {
     @JoinColumn(name = "professor_id", nullable = false)
     private Professor professor;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "subject", fetch = FetchType.EAGER)
     private List<Grade> grades;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "subject")
     private List<SubjectCourse> subjectCourse;
 }

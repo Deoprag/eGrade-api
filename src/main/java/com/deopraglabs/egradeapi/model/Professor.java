@@ -31,6 +31,7 @@ public class Professor extends User implements Serializable {
     @Transient
     private Role role = Role.PROFESSOR;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "professor", fetch = FetchType.EAGER)
     private List<Subject> subjects;
 }
