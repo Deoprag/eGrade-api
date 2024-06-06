@@ -40,4 +40,7 @@ public class Student extends User implements Serializable {
     @OneToMany(mappedBy = "student", fetch = FetchType.EAGER)
     private List<Grade> grades;
 
+    @OneToMany(mappedBy = "student", fetch = FetchType.EAGER)
+    private List<Attendance> attendances;
+
 }

@@ -14,9 +14,6 @@ import java.io.Serializable;
 @DynamicInsert
 @DynamicUpdate
 @Entity
-@Table(name = "grade", uniqueConstraints = {
-        @UniqueConstraint(columnNames = {"student_id", "grade_type"})
-})
 public class Grade implements Serializable {
 
     @Serial
@@ -27,12 +24,11 @@ public class Grade implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    @Column(name = "grade")
-    private float grade;
+    @Column(name = "n1")
+    private float n1;
 
-    @Column(name = "grade_type")
-    @Enumerated
-    private GradeType gradeType;
+    @Column(name = "n2")
+    private float n2;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "student_id", nullable = false)

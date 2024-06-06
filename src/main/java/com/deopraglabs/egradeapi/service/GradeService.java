@@ -1,9 +1,7 @@
 package com.deopraglabs.egradeapi.service;
 
 import com.deopraglabs.egradeapi.model.Grade;
-import com.deopraglabs.egradeapi.model.GradeType;
 import com.deopraglabs.egradeapi.model.Student;
-import com.deopraglabs.egradeapi.model.Subject;
 import com.deopraglabs.egradeapi.repository.GradeRepository;
 import com.deopraglabs.egradeapi.repository.StudentRepository;
 import com.deopraglabs.egradeapi.repository.SubjectRepository;
@@ -85,8 +83,8 @@ public class GradeService {
 
         grade.setSubject(subjectRepository.findById(Long.parseLong(requestMap.get("subject_id"))).get());
         grade.setStudent(studentRepository.findById(Long.parseLong(requestMap.get("student_id"))).get());
-        grade.setGradeType(GradeType.valueOf(requestMap.get("grade_type")));
-        grade.setGrade(Float.parseFloat(requestMap.get("grade")));
+        grade.setN1(Float.parseFloat(requestMap.get("n1")));
+        grade.setN2(Float.parseFloat(requestMap.get("n2")));
 
         return grade;
     }
