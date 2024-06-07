@@ -70,10 +70,10 @@ public class LoginController {
     @PostMapping("/registerProfessor")
     public ResponseEntity<String> registerProfessor() {
         try {
-            for (int i = 1000001; i < 1000026; i++) {
+            for (int i = 1001; i < 1010; i++) {
                 Professor professor = new Professor();
                 professor.setName("Professor " + i);
-                professor.setCpf("1234" + i);
+                professor.setCpf("6543210" + i);
                 professor.setEmail("professor" + i + "@gmail.com");
                 professor.setGender(Gender.M);
                 professor.setPhoneNumber("9876" + i);
@@ -92,10 +92,10 @@ public class LoginController {
     @PostMapping("/registerCoordinator")
     public ResponseEntity<String> registerCoordinator() {
         try {
-            for (int i = 1000001; i < 1000006; i++) {
+            for (int i = 1001; i < 1010; i++) {
                 Coordinator coordinator = new Coordinator();
                 coordinator.setName("Coordinator " + i);
-                coordinator.setCpf("1234" + i);
+                coordinator.setCpf("0123456" + i);
                 coordinator.setEmail("coordinator" + i + "@gmail.com");
                 coordinator.setGender(Gender.M);
                 coordinator.setPhoneNumber("9876" + i);
