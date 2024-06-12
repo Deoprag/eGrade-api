@@ -115,4 +115,14 @@ public class CourseService {
         }
         return new ResponseEntity<>(new ArrayList<>(), HttpStatus.INTERNAL_SERVER_ERROR);
     }
+
+    public ResponseEntity<List<Course>> findByCoordinatorId(long id) {
+        log.info("Finding all courses by coordinator");
+        try {
+            return new ResponseEntity<>(courseRepository.findByCoordinator(coordinatorRepository.findById(id).get()), HttpStatus.OK);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return new ResponseEntity<>(new ArrayList<>(), HttpStatus.INTERNAL_SERVER_ERROR);
+    }
 }

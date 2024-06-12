@@ -1,5 +1,6 @@
 package com.deopraglabs.egradeapi.repository;
 
+import com.deopraglabs.egradeapi.model.Coordinator;
 import com.deopraglabs.egradeapi.model.Course;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
@@ -15,4 +16,6 @@ public interface CourseRepository extends JpaRepository<Course, Long> {
     public Course findByName(String name);
 
     public List<Course> findAll();
+
+    public List<Course> findByCoordinator(Coordinator coordinator);
 }

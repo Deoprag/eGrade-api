@@ -73,4 +73,14 @@ public class CourseController {
         return new ResponseEntity<>(new ArrayList<>(), HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
+    @GetMapping("/findByCoordinatorId/{id}")
+    public ResponseEntity<List<Course>> findByCoordinatorId(@PathVariable long id) {
+        try {
+            return courseService.findByCoordinatorId(id);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return new ResponseEntity<>(new ArrayList<>(), HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
 }
