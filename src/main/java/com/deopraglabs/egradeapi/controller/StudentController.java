@@ -73,4 +73,14 @@ public class StudentController {
         return new ResponseEntity<>(new ArrayList<>(), HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
+    @GetMapping("/findAllByCourse/{id}")
+    public ResponseEntity<List<Student>> findById(@PathVariable long id) {
+        try {
+            return studentService.findAllByCourse(id);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return new ResponseEntity<>(new ArrayList<>(), HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
 }

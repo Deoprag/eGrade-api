@@ -133,4 +133,14 @@ public class StudentService {
         }
         return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
     }
+
+    public ResponseEntity<List<Student>> findAllByCourse(long courseId) {
+        log.info("Finding all students by course");
+        try {
+            return new ResponseEntity<>(studentRepository.findAllByCourse(courseRepository.findById(courseId).get()), HttpStatus.OK);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+    }
 }
