@@ -31,6 +31,12 @@ public class Grade implements Serializable {
     @Column(name = "n2")
     private float n2;
 
+    @Column(name = "test1", columnDefinition = "bytea")
+    private byte[] test1;
+
+    @Column(name = "test2", columnDefinition = "bytea")
+    private byte[] test2;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "student_id", nullable = false)
     @JsonIgnore
