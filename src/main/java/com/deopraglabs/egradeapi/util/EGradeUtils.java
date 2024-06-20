@@ -90,34 +90,6 @@ public class EGradeUtils {
         return code.toString();
     }
 
-    public static Blob convertToBlob(FileInputStream imageFis) throws SQLException {
-        try {
-            byte[] bytes = new byte[imageFis.available()];
-            imageFis.read(bytes);
-            final Blob image = new SerialBlob(bytes);
-            return image;
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
-
-    public static FileInputStream convertFromBlob(Blob image) throws Exception {
-        final File tempFile = File.createTempFile("tempfile", null);
-        try (InputStream inputStream = image.getBinaryStream();
-            final FileOutputStream outputStream = new FileOutputStream(tempFile)) {
-            byte[] buffer = new byte[4096];
-            int bytesRead = -1;
-            while ((bytesRead = inputStream.read(buffer)) != -1) {
-                outputStream.write(buffer, 0, bytesRead);
-            }
-            return new FileInputStream(tempFile);
-        } catch (Exception e) {
-            tempFile.delete();
-            throw e;
-        }
-    }
-
     public static ResponseEntity<String> getResponseEntity(String responseMessage, HttpStatus httpStatus) {
         return new ResponseEntity<String>("{\"message\":\"" + responseMessage + "\"}", httpStatus);
     }
@@ -170,15 +142,5 @@ public class EGradeUtils {
 
     public static FileInputStream findFile(String path) throws FileNotFoundException {
         return new FileInputStream(new File(path));
-    }
-
-    public static byte[] getProfileImage() {
-        try {
-            final FileInputStream imageFis = findFile("src/main/resources/img/user.png");
-            return imageFis.readAllBytes();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return null;
     }
 }

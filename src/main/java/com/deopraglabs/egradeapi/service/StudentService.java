@@ -13,10 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.text.ParseException;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 @Slf4j
@@ -78,9 +75,7 @@ public class StudentService {
     public ResponseEntity<String> update(Map<String, String> requestMap) {
         log.info("Updating student {}");
         try {
-            final Student student = getStudentFromMap(requestMap);
-            student.setId(Long.parseLong(requestMap.get("id")));
-            studentRepository.save(student);
+            studentRepository.save(getStudentFromMap(requestMap));
             return EGradeUtils.getResponseEntity(Constants.SUCCESS, HttpStatus.OK);
         } catch (ParseException e) {
             e.printStackTrace();
@@ -106,13 +101,17 @@ public class StudentService {
     private Student getStudentFromMap(Map<String, String> requestMap) throws ParseException {
         final Student student = new Student();
 
+        if (requestMap.containsKey("id")) {
+            student.setId(Long.parseLong(requestMap.get("id")));
+        }
         student.setName(requestMap.get("name"));
         student.setCpf(requestMap.get("cpf"));
         student.setGender(Gender.valueOf(requestMap.get("gender")));
+        log.info(requestMap.get("gender"));
         student.setEmail(requestMap.get("email"));
         student.setPhoneNumber(requestMap.get("phoneNumber"));
-        student.setBirthDate(EGradeUtils.stringToDate(requestMap.get("birthDate")));
         student.setPassword(EGradeUtils.hashPassword(requestMap.get("password")));
+        student.setBirthDate(EGradeUtils.stringToDate(requestMap.get("birthDate")));
         student.setActive(Boolean.parseBoolean(requestMap.get("active")));
         if (courseRepository.findById(Long.parseLong(requestMap.get("course"))).isPresent()) {
             student.setCourse(courseRepository.findById(Long.parseLong(requestMap.get("course"))).get());
