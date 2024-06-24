@@ -107,16 +107,17 @@ public class StudentService {
         student.setName(requestMap.get("name"));
         student.setCpf(requestMap.get("cpf"));
         student.setGender(Gender.valueOf(requestMap.get("gender")));
-        log.info(requestMap.get("gender"));
         student.setEmail(requestMap.get("email"));
         student.setPhoneNumber(requestMap.get("phoneNumber"));
-        student.setPassword(EGradeUtils.hashPassword(requestMap.get("password")));
+        if (requestMap.get("password") != null) {
+            student.setPassword(EGradeUtils.hashPassword(requestMap.get("password")));
+        }
         student.setBirthDate(EGradeUtils.stringToDate(requestMap.get("birthDate")));
         student.setActive(Boolean.parseBoolean(requestMap.get("active")));
         if (courseRepository.findById(Long.parseLong(requestMap.get("course"))).isPresent()) {
             student.setCourse(courseRepository.findById(Long.parseLong(requestMap.get("course"))).get());
         }
-        if (requestMap.get("profilePicture") != null) {
+        if (requestMap.get("profilePicture") != null || requestMap.get("profilePicture").isEmpty() || requestMap.get("profilePicture").isBlank()) {
             student.setProfilePicture(requestMap.get("profilePicture").getBytes());
         }
 
