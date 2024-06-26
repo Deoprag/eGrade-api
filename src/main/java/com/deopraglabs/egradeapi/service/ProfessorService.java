@@ -1,11 +1,10 @@
 package com.deopraglabs.egradeapi.service;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 
+import com.deopraglabs.egradeapi.model.Subject;
 import com.deopraglabs.egradeapi.repository.ProfessorRepository;
+import com.deopraglabs.egradeapi.repository.SubjectRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,6 +22,9 @@ public class ProfessorService {
 
     @Autowired
     ProfessorRepository professorRepository;
+
+    @Autowired
+    SubjectRepository subjectRepository;
 
     public ResponseEntity<Professor> login(Map<String, String> requestMap) {
         log.info("Logging in professor {}");
@@ -115,8 +117,22 @@ public class ProfessorService {
         if (requestMap.get("profilePicture") != null) {
             professor.setProfilePicture(requestMap.get("profilePicture").getBytes());
         }
-
+        for (Subject subject : getSubjects(requestMap.get("subjects"))) {
+            professor.getSubjects().add(subject);
+        }
         return professor;
+    }
+
+    private List<Subject> getSubjects(String subjects) {
+        final List<Subject> subjectList = new ArrayList<>();
+        final String[] subjectIds = subjects.split(",");
+
+        for (String subjectId : subjectIds) {
+            Optional<Subject> subject = subjectRepository.findById(Long.parseLong(subjectId));
+            subject.ifPresent(subjectList::add);
+        }
+
+        return subjectList;
     }
 
     private Professor updateProfessorFromMap(Map<String, String> requestMap, Professor professor) throws Exception {
