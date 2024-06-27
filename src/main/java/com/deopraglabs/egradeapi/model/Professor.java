@@ -2,6 +2,7 @@ package com.deopraglabs.egradeapi.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 
@@ -33,5 +34,6 @@ public class Professor extends User implements Serializable {
 
     @JsonIgnore
     @OneToMany(mappedBy = "professor", fetch = FetchType.EAGER)
+    @Cascade(org.hibernate.annotations.CascadeType.ALL)
     private List<Subject> subjects;
 }

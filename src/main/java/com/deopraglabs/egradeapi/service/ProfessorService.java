@@ -1,10 +1,11 @@
 package com.deopraglabs.egradeapi.service;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 
+import com.deopraglabs.egradeapi.model.Course;
+import com.deopraglabs.egradeapi.model.Student;
+import com.deopraglabs.egradeapi.model.Subject;
+import com.deopraglabs.egradeapi.repository.CourseRepository;
 import com.deopraglabs.egradeapi.repository.ProfessorRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -23,6 +24,9 @@ public class ProfessorService {
 
     @Autowired
     ProfessorRepository professorRepository;
+
+    @Autowired
+    CourseRepository courseRepository;
 
     public ResponseEntity<Professor> login(Map<String, String> requestMap) {
         log.info("Logging in professor {}");
@@ -137,6 +141,21 @@ public class ProfessorService {
         log.info("Finding all professors");
         try {
             final List<Professor> professors = professorRepository.findAll();
+            return new ResponseEntity<>(professors, HttpStatus.OK);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    public ResponseEntity<List<Professor>> findAllByCourse(long id) {
+        log.info("Finding all professors by course id {}", id);
+        try {
+            Course course = courseRepository.findById(id).get();
+            List<Professor> professors = new ArrayList<>();
+            for (Subject subject: course.getSubjects()) {
+                professors.add(subject.getProfessor());
+            }
             return new ResponseEntity<>(professors, HttpStatus.OK);
         } catch (Exception e) {
             e.printStackTrace();
