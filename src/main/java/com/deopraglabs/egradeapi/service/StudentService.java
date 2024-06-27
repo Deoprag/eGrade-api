@@ -78,8 +78,7 @@ public class StudentService {
     public ResponseEntity<String> update(Map<String, String> requestMap) {
         log.info("Updating student {}");
         try {
-            final Student student = getStudentFromMap(requestMap);
-            student.setId(Long.parseLong(requestMap.get("id")));
+            final Student student = updateStudentFromMap(requestMap);
             studentRepository.save(student);
             return EGradeUtils.getResponseEntity(Constants.SUCCESS, HttpStatus.OK);
         } catch (ParseException e) {
@@ -112,7 +111,32 @@ public class StudentService {
         student.setEmail(requestMap.get("email"));
         student.setPhoneNumber(requestMap.get("phoneNumber"));
         student.setBirthDate(EGradeUtils.stringToDate(requestMap.get("birthDate")));
-        student.setPassword(EGradeUtils.hashPassword(requestMap.get("password")));
+        if (requestMap.get("password") != null) {
+            student.setPassword(EGradeUtils.hashPassword(requestMap.get("password")));
+        }
+        student.setActive(Boolean.parseBoolean(requestMap.get("active")));
+        if (courseRepository.findById(Long.parseLong(requestMap.get("course"))).isPresent()) {
+            student.setCourse(courseRepository.findById(Long.parseLong(requestMap.get("course"))).get());
+        }
+        if (requestMap.get("profilePicture") != null) {
+            student.setProfilePicture(requestMap.get("profilePicture").getBytes());
+        }
+
+        return student;
+    }
+
+    private Student updateStudentFromMap(Map<String, String> requestMap) throws ParseException {
+        final Student student = studentRepository.findById(Long.parseLong(requestMap.get("id"))).get();
+
+        student.setName(requestMap.get("name"));
+        student.setCpf(requestMap.get("cpf"));
+        student.setGender(Gender.valueOf(requestMap.get("gender")));
+        student.setEmail(requestMap.get("email"));
+        student.setPhoneNumber(requestMap.get("phoneNumber"));
+        student.setBirthDate(EGradeUtils.stringToDate(requestMap.get("birthDate")));
+        if (requestMap.get("password") != null) {
+            student.setPassword(EGradeUtils.hashPassword(requestMap.get("password")));
+        }
         student.setActive(Boolean.parseBoolean(requestMap.get("active")));
         if (courseRepository.findById(Long.parseLong(requestMap.get("course"))).isPresent()) {
             student.setCourse(courseRepository.findById(Long.parseLong(requestMap.get("course"))).get());
