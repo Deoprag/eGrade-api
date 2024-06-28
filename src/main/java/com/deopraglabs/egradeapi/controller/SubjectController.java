@@ -53,6 +53,16 @@ public class SubjectController {
         }
     }
 
+    @GetMapping("/findAll/")
+    public ResponseEntity<List<Subject>> findAll() {
+        try {
+            return subjectService.findAll();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return new ResponseEntity<>(new ArrayList<>(), HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
     @GetMapping("/findById/{id}")
     public ResponseEntity<Subject> findById(@PathVariable Long id) {
         try {

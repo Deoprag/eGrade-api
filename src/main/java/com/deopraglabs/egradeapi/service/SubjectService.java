@@ -41,7 +41,7 @@ public class SubjectService {
         log.info("Registering subject {}");
         try {
             final Subject subject = subjectRepository.findByName(requestMap.get("name"));
-            if (subject != null) {
+            if (subject == null) {
                 subjectRepository.save(getSubjectFromMap(requestMap));
                 return EGradeUtils.getResponseEntity(Constants.SUCCESS, HttpStatus.OK);
             } else {
@@ -86,6 +86,16 @@ public class SubjectService {
             e.printStackTrace();
         }
         return new ResponseEntity<>(new Subject(), HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    public ResponseEntity<List<Subject>> findAll() {
+        log.info("Finding all subjects {}");
+        try {
+            return new ResponseEntity<>(subjectRepository.findAll(), HttpStatus.OK);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return new ResponseEntity<>(new ArrayList<>(), HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
     private Subject getSubjectFromMap(Map<String, String> requestMap) throws ParseException {

@@ -76,7 +76,7 @@ public class LoginController {
                 professor.setCpf("6543210" + i);
                 professor.setEmail("professor" + i + "@gmail.com");
                 professor.setGender(Gender.M);
-                professor.setPhoneNumber("9876" + i);
+                professor.setPhoneNumber("6543210" + i);
                 professor.setBirthDate(new Date());
                 professor.setPassword(EGradeUtils.hashPassword("senha" + i));
                 professor.setActive(true);
@@ -98,7 +98,7 @@ public class LoginController {
                 coordinator.setCpf("0123456" + i);
                 coordinator.setEmail("coordinator" + i + "@gmail.com");
                 coordinator.setGender(Gender.M);
-                coordinator.setPhoneNumber("9876" + i);
+                coordinator.setPhoneNumber("6543210" + i);
                 coordinator.setBirthDate(new Date());
                 coordinator.setPassword(EGradeUtils.hashPassword("senha" + i));
                 coordinator.setActive(true);

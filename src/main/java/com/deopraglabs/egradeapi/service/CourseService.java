@@ -38,7 +38,7 @@ public class CourseService {
     public ResponseEntity<String> save(Map<String, String> requestMap) {
         log.info("Registering course {}");
         try {
-            courseRepository.save(getCourseFromMap(requestMap)); // Save the course again
+            courseRepository.save(getCourseFromMap(requestMap));
             return EGradeUtils.getResponseEntity(Constants.SUCCESS, HttpStatus.OK);
         } catch (Exception e) {
             e.printStackTrace();
