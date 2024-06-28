@@ -98,6 +98,25 @@ public class SubjectService {
         return new ResponseEntity<>(new ArrayList<>(), HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
+    public ResponseEntity<List<Subject>> findByCoordinatorId(long id) {
+        log.info("Finding all subjects by coordinator id {}", id);
+        try {
+            courseRepository.findByCoordinator(coordinatorRepository.findById(id).get());
+            List<Subject> subjectList = new ArrayList<>();
+            for (Subject subject : subjectRepository.findAll()) {
+                for (Course course : courseRepository.findByCoordinator(coordinatorRepository.findById(id).get())) {
+                    if (course.getSubjects().contains(subject)) {
+                        subjectList.add(subject);
+                    }
+                }
+            }
+            return new ResponseEntity<>(subjectList, HttpStatus.OK);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return new ResponseEntity<>(new ArrayList<>(), HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
     private Subject getSubjectFromMap(Map<String, String> requestMap) throws ParseException {
         final Subject subject = new Subject();
 

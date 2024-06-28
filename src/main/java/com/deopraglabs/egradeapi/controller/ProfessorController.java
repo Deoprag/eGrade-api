@@ -75,9 +75,19 @@ public class ProfessorController {
     }
 
     @GetMapping("/findAllByCourse/{id}")
-    public ResponseEntity<List<Professor>> findById(@PathVariable long id) {
+    public ResponseEntity<List<Professor>> findAllByCourse(@PathVariable long id) {
         try {
             return professorService.findAllByCourse(id);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return new ResponseEntity<>(new ArrayList<>(), HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    @GetMapping("/findAllByCoordinator/{id}")
+    public ResponseEntity<List<Professor>> findAllByCoordinator(@PathVariable long id) {
+        try {
+            return professorService.findAllByCoordinator(id);
         } catch (Exception e) {
             e.printStackTrace();
         }

@@ -73,4 +73,14 @@ public class SubjectController {
         return new ResponseEntity<>(new Subject(), HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
+    @GetMapping("/findByCoordinatorId/{id}")
+    public ResponseEntity<List<Subject>> findByCoordinatorId(@PathVariable Long id) {
+        try {
+            return subjectService.findByCoordinatorId(id);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return new ResponseEntity<>(new ArrayList<>(), HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
 }

@@ -2,9 +2,8 @@ package com.deopraglabs.egradeapi.service;
 
 import java.util.*;
 
-import com.deopraglabs.egradeapi.model.Course;
-import com.deopraglabs.egradeapi.model.Student;
-import com.deopraglabs.egradeapi.model.Subject;
+import com.deopraglabs.egradeapi.model.*;
+import com.deopraglabs.egradeapi.repository.CoordinatorRepository;
 import com.deopraglabs.egradeapi.repository.CourseRepository;
 import com.deopraglabs.egradeapi.repository.ProfessorRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,7 +11,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import com.deopraglabs.egradeapi.model.Professor;
 import com.deopraglabs.egradeapi.util.Constants;
 import com.deopraglabs.egradeapi.util.EGradeUtils;
 
@@ -24,6 +22,9 @@ public class ProfessorService {
 
     @Autowired
     ProfessorRepository professorRepository;
+
+    @Autowired
+    CoordinatorRepository coordinatorRepository;
 
     @Autowired
     CourseRepository courseRepository;
@@ -128,12 +129,15 @@ public class ProfessorService {
         if (requestMap.get("cpf") != null) professor.setCpf(requestMap.get("cpf"));
         if (requestMap.get("email") != null) professor.setEmail(requestMap.get("email"));
         if (requestMap.get("phoneNumber") != null) professor.setPhoneNumber(requestMap.get("phoneNumber"));
-        if (requestMap.get("birthDate") != null)
+        if (requestMap.get("birthDate") != null) {
             professor.setBirthDate(EGradeUtils.stringToDate(requestMap.get("birthDate")));
-        if (requestMap.get("profilePicture") != null)
+        }
+        if (requestMap.get("profilePicture") != null && !requestMap.get("profilePicture").equalsIgnoreCase("")) {
             professor.setProfilePicture(requestMap.get("profilePicture").getBytes());
-        if (requestMap.get("active") != null) professor.setActive(Boolean.parseBoolean(requestMap.get("active")));
-
+        }
+        if (requestMap.get("active") != null) {
+            professor.setActive(Boolean.parseBoolean(requestMap.get("active")));
+        }
         return professor;
     }
 
@@ -154,7 +158,34 @@ public class ProfessorService {
             Course course = courseRepository.findById(id).get();
             List<Professor> professors = new ArrayList<>();
             for (Subject subject: course.getSubjects()) {
-                professors.add(subject.getProfessor());
+                if (!professors.contains(subject.getProfessor())) {
+                    professors.add(subject.getProfessor());
+                }
+            }
+            return new ResponseEntity<>(professors, HttpStatus.OK);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    public ResponseEntity<List<Professor>> findAllByCoordinator(long id) {
+        log.info("Finding all professors by course id {}", id);
+        try {
+            Coordinator coordinator = coordinatorRepository.findById(id).get();
+            List<Professor> professors = new ArrayList<>();
+            List<Course> courses = courseRepository.findByCoordinator(coordinator);
+            for (Course course: courses) {
+                for (Subject subject: course.getSubjects()) {
+                    if (!professors.contains(subject.getProfessor())) {
+                        professors.add(subject.getProfessor());
+                    }
+                }
+            }
+            for (Professor professor : professorRepository.findAll()) {
+                if (professor.getSubjects().isEmpty()) {
+                    professors.add(professor);
+                }
             }
             return new ResponseEntity<>(professors, HttpStatus.OK);
         } catch (Exception e) {
