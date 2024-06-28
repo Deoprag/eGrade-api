@@ -86,9 +86,11 @@ public class CourseService {
 
         course.setName(requestMap.get("name"));
         course.setDescription(requestMap.get("description"));
-        course.setCoordinator(coordinatorRepository.findById(Long.parseLong(requestMap.get("coordinator_id"))).get());
-        for (Subject subject : getSubjects(requestMap.get("subjects"))) {
-            course.getSubjects().add(subject);
+        course.setCoordinator(coordinatorRepository.findById(Long.parseLong(requestMap.get("coordinatorId"))).get());
+        if (requestMap.get("subjects") != null && !requestMap.get("subjects").isEmpty()) {
+            for (Subject subject : getSubjects(requestMap.get("subjects"))) {
+                course.getSubjects().add(subject);
+            }
         }
 
         return course;
