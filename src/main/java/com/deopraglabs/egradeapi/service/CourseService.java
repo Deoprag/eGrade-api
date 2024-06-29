@@ -62,6 +62,11 @@ public class CourseService {
         try {
             final Course course = getCourseFromMap(requestMap);
             course.setId(Long.parseLong(requestMap.get("id")));
+            log.info(course.getName());
+            log.info(course.getCoordinator().getName());
+            for (Subject subject: course.getSubjects()) {
+                log.info(subject.getName());
+            }
             courseRepository.save(course);
             return EGradeUtils.getResponseEntity(Constants.SUCCESS, HttpStatus.OK);
         } catch (ParseException e) {
