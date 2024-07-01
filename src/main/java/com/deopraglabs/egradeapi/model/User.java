@@ -35,8 +35,8 @@ public abstract class User implements Serializable {
     @Column(name = "birth_date", nullable = false)
     private Date birthDate;
 
-    @Column(name = "profile_picture", columnDefinition = "bytea")
-    private byte[] profilePicture;
+    @Column(name = "profile_picture", columnDefinition = "text")
+    private String profilePicture;
 
     @JsonIgnore
     @Column(name = "password", nullable = false)

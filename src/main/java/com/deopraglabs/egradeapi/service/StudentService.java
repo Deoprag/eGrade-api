@@ -118,8 +118,8 @@ public class StudentService {
         if (courseRepository.findById(Long.parseLong(requestMap.get("course"))).isPresent()) {
             student.setCourse(courseRepository.findById(Long.parseLong(requestMap.get("course"))).get());
         }
-        if (requestMap.get("profilePicture") != null) {
-            student.setProfilePicture(requestMap.get("profilePicture").getBytes());
+        if (requestMap.get("profilePicture") != null && !requestMap.get("profilePicture").isEmpty()) {
+            student.setProfilePicture(requestMap.get("profilePicture"));
         }
 
         return student;
@@ -141,8 +141,8 @@ public class StudentService {
         if (courseRepository.findById(Long.parseLong(requestMap.get("course"))).isPresent()) {
             student.setCourse(courseRepository.findById(Long.parseLong(requestMap.get("course"))).get());
         }
-        if (requestMap.get("profilePicture") != null) {
-            student.setProfilePicture(requestMap.get("profilePicture").getBytes());
+        if (requestMap.get("profilePicture") != null && !requestMap.get("profilePicture").isEmpty()) {
+            student.setProfilePicture(requestMap.get("profilePicture"));
         }
 
         return student;

@@ -117,27 +117,24 @@ public class ProfessorService {
         professor.setBirthDate(EGradeUtils.stringToDate(requestMap.get("birthDate")));
         professor.setPassword(EGradeUtils.hashPassword(requestMap.get("password")));
         professor.setActive(Boolean.parseBoolean(requestMap.get("active")));
-        if (requestMap.get("profilePicture") != null) {
-            professor.setProfilePicture(requestMap.get("profilePicture").getBytes());
+        if (requestMap.get("profilePicture") != null && !requestMap.get("profilePicture").isEmpty()) {
+            professor.setProfilePicture(requestMap.get("profilePicture"));
         }
 
         return professor;
     }
 
     private Professor updateProfessorFromMap(Map<String, String> requestMap, Professor professor) throws Exception {
-        if (requestMap.get("name") != null) professor.setName(requestMap.get("name"));
-        if (requestMap.get("cpf") != null) professor.setCpf(requestMap.get("cpf"));
-        if (requestMap.get("email") != null) professor.setEmail(requestMap.get("email"));
-        if (requestMap.get("phoneNumber") != null) professor.setPhoneNumber(requestMap.get("phoneNumber"));
-        if (requestMap.get("birthDate") != null) {
-            professor.setBirthDate(EGradeUtils.stringToDate(requestMap.get("birthDate")));
+        professor.setName(requestMap.get("name"));
+        professor.setCpf(requestMap.get("cpf"));
+        professor.setEmail(requestMap.get("email"));
+        professor.setPhoneNumber(requestMap.get("phoneNumber"));
+        professor.setBirthDate(EGradeUtils.stringToDate(requestMap.get("birthDate")));
+        professor.setActive(Boolean.parseBoolean(requestMap.get("active")));
+        if (requestMap.get("profilePicture") != null && !requestMap.get("profilePicture").isEmpty()) {
+            professor.setProfilePicture(requestMap.get("profilePicture"));
         }
-        if (requestMap.get("profilePicture") != null && !requestMap.get("profilePicture").equalsIgnoreCase("")) {
-            professor.setProfilePicture(requestMap.get("profilePicture").getBytes());
-        }
-        if (requestMap.get("active") != null) {
-            professor.setActive(Boolean.parseBoolean(requestMap.get("active")));
-        }
+
         return professor;
     }
 

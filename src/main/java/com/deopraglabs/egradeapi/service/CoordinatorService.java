@@ -106,7 +106,7 @@ public class CoordinatorService {
         coordinator.setPassword(EGradeUtils.hashPassword(requestMap.get("password")));
         coordinator.setActive(Boolean.parseBoolean(requestMap.get("active")));
         if (requestMap.get("profilePicture") != null) {
-            coordinator.setProfilePicture(requestMap.get("profilePicture").getBytes());
+            coordinator.setProfilePicture(requestMap.get("profilePicture"));
         }
 
         return coordinator;

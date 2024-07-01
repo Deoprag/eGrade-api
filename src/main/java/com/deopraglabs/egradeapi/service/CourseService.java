@@ -91,6 +91,7 @@ public class CourseService {
 
         course.setName(requestMap.get("name"));
         course.setDescription(requestMap.get("description"));
+        log.info(requestMap.get("coordinatorId"));
         course.setCoordinator(coordinatorRepository.findById(Long.parseLong(requestMap.get("coordinatorId"))).get());
         if (requestMap.get("subjects") != null && !requestMap.get("subjects").isEmpty()) {
             for (Subject subject : getSubjects(requestMap.get("subjects"))) {

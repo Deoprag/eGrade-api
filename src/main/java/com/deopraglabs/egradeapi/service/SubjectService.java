@@ -105,7 +105,7 @@ public class SubjectService {
             List<Subject> subjectList = new ArrayList<>();
             for (Subject subject : subjectRepository.findAll()) {
                 for (Course course : courseRepository.findByCoordinator(coordinatorRepository.findById(id).get())) {
-                    if (course.getSubjects().contains(subject)) {
+                    if (course.getSubjects().contains(subject) && !subjectList.contains(subject)) {
                         subjectList.add(subject);
                     }
                 }
