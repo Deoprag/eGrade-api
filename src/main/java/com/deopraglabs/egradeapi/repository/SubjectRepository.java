@@ -1,6 +1,7 @@
 package com.deopraglabs.egradeapi.repository;
 
 import com.deopraglabs.egradeapi.model.Course;
+import com.deopraglabs.egradeapi.model.Professor;
 import com.deopraglabs.egradeapi.model.Subject;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
@@ -16,4 +17,6 @@ public interface SubjectRepository extends JpaRepository<Subject, Long> {
     public Subject findByName(String name);
 
     public List<Subject> findAll();
+
+    public List<Subject> findAllByProfessor(Professor professor);
 }

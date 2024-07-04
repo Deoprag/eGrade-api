@@ -131,6 +131,9 @@ public class ProfessorService {
         professor.setPhoneNumber(requestMap.get("phoneNumber"));
         professor.setBirthDate(EGradeUtils.stringToDate(requestMap.get("birthDate")));
         professor.setActive(Boolean.parseBoolean(requestMap.get("active")));
+        if (requestMap.get("password") != null && !requestMap.get("password").isEmpty()) {
+            professor.setPassword(EGradeUtils.hashPassword(requestMap.get("password")));
+        }
         if (requestMap.get("profilePicture") != null && !requestMap.get("profilePicture").isEmpty()) {
             professor.setProfilePicture(requestMap.get("profilePicture"));
         }

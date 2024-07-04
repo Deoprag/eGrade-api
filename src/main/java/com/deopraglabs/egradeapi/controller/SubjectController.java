@@ -83,4 +83,15 @@ public class SubjectController {
         return new ResponseEntity<>(new ArrayList<>(), HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
+    @GetMapping("/findByProfessorId/{id}")
+    public ResponseEntity<List<Subject>> findByProfessorId(@PathVariable Long id) {
+        try {
+            return subjectService.findByProfessorId(id);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return new ResponseEntity<>(new ArrayList<>(), HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+
 }

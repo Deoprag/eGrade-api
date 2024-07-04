@@ -74,7 +74,7 @@ public class StudentController {
     }
 
     @GetMapping("/findAllByCourse/{id}")
-    public ResponseEntity<List<Student>> findById(@PathVariable long id) {
+    public ResponseEntity<List<Student>> findByCourse(@PathVariable long id) {
         try {
             return studentService.findAllByCourse(id);
         } catch (Exception e) {
@@ -83,4 +83,14 @@ public class StudentController {
         return new ResponseEntity<>(new ArrayList<>(), HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
+
+    @GetMapping("/findAllBySubject/{id}")
+    public ResponseEntity<List<Student>> findAllBySubject(@PathVariable long id) {
+        try {
+            return studentService.findAllBySubject(id);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return new ResponseEntity<>(new ArrayList<>(), HttpStatus.INTERNAL_SERVER_ERROR);
+    }
 }

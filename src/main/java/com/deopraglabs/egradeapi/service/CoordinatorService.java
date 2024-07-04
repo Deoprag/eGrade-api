@@ -70,8 +70,7 @@ public class CoordinatorService {
     public ResponseEntity<String> update(Map<String, String> requestMap) {
         log.info("Updating coordinator {}");
         try {
-            final Coordinator coordinator = getCoordinatorFromMap(requestMap);
-            coordinator.setId(Long.parseLong(requestMap.get("id")));
+            final Coordinator coordinator = updateCoordinatorFromMap(requestMap);
             coordinatorRepository.save(coordinator);
             return EGradeUtils.getResponseEntity(Constants.SUCCESS, HttpStatus.OK);
         } catch (ParseException e) {
@@ -105,6 +104,25 @@ public class CoordinatorService {
         coordinator.setBirthDate(EGradeUtils.stringToDate(requestMap.get("birthDate")));
         coordinator.setPassword(EGradeUtils.hashPassword(requestMap.get("password")));
         coordinator.setActive(Boolean.parseBoolean(requestMap.get("active")));
+        if (requestMap.get("profilePicture") != null) {
+            coordinator.setProfilePicture(requestMap.get("profilePicture"));
+        }
+
+        return coordinator;
+    }
+
+    private Coordinator updateCoordinatorFromMap(Map<String, String> requestMap) throws ParseException {
+        final Coordinator coordinator = coordinatorRepository.findById(Long.parseLong(requestMap.get("id"))).get();
+
+        coordinator.setName(requestMap.get("name"));
+        coordinator.setCpf(requestMap.get("cpf"));
+        coordinator.setEmail(requestMap.get("email"));
+        coordinator.setPhoneNumber(requestMap.get("phoneNumber"));
+        coordinator.setBirthDate(EGradeUtils.stringToDate(requestMap.get("birthDate")));
+        coordinator.setActive(Boolean.parseBoolean(requestMap.get("active")));
+        if (requestMap.get("password") != null && !requestMap.get("password").isEmpty()) {
+            coordinator.setPassword(EGradeUtils.hashPassword(requestMap.get("password")));
+        }
         if (requestMap.get("profilePicture") != null) {
             coordinator.setProfilePicture(requestMap.get("profilePicture"));
         }

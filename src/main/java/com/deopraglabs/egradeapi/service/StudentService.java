@@ -2,8 +2,10 @@ package com.deopraglabs.egradeapi.service;
 
 import com.deopraglabs.egradeapi.model.Gender;
 import com.deopraglabs.egradeapi.model.Student;
+import com.deopraglabs.egradeapi.model.Subject;
 import com.deopraglabs.egradeapi.repository.CourseRepository;
 import com.deopraglabs.egradeapi.repository.StudentRepository;
+import com.deopraglabs.egradeapi.repository.SubjectRepository;
 import com.deopraglabs.egradeapi.util.Constants;
 import com.deopraglabs.egradeapi.util.EGradeUtils;
 import lombok.extern.slf4j.Slf4j;
@@ -13,10 +15,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.text.ParseException;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 @Slf4j
@@ -27,6 +26,9 @@ public class StudentService {
 
     @Autowired
     CourseRepository courseRepository;
+
+    @Autowired
+    SubjectRepository subjectRepository;
 
     public ResponseEntity<Student> login(Map<String, String> requestMap) {
         log.info("Logging in student {}");
@@ -134,10 +136,10 @@ public class StudentService {
         student.setEmail(requestMap.get("email"));
         student.setPhoneNumber(requestMap.get("phoneNumber"));
         student.setBirthDate(EGradeUtils.stringToDate(requestMap.get("birthDate")));
-        if (requestMap.get("password") != null) {
+        student.setActive(Boolean.parseBoolean(requestMap.get("active")));
+        if (requestMap.get("password") != null && !requestMap.get("password").isEmpty()) {
             student.setPassword(EGradeUtils.hashPassword(requestMap.get("password")));
         }
-        student.setActive(Boolean.parseBoolean(requestMap.get("active")));
         if (courseRepository.findById(Long.parseLong(requestMap.get("course"))).isPresent()) {
             student.setCourse(courseRepository.findById(Long.parseLong(requestMap.get("course"))).get());
         }
@@ -162,6 +164,23 @@ public class StudentService {
         log.info("Finding all students by course");
         try {
             return new ResponseEntity<>(studentRepository.findAllByCourse(courseRepository.findById(courseId).get()), HttpStatus.OK);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    public ResponseEntity<List<Student>> findAllBySubject(long subjectId) {
+        log.info("Finding all students by subject");
+        try {
+            Subject subject = subjectRepository.findById(subjectId).get();
+            List<Student> studentList = new ArrayList<>();
+            for (Student student : studentRepository.findAll()) {
+                if (student.getCourse().getSubjects().contains(subject) && !studentList.contains(student)) {
+                    studentList.add(student);
+                }
+            }
+            return new ResponseEntity<>(studentList, HttpStatus.OK);
         } catch (Exception e) {
             e.printStackTrace();
         }

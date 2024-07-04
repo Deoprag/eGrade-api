@@ -117,6 +117,16 @@ public class SubjectService {
         return new ResponseEntity<>(new ArrayList<>(), HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
+    public ResponseEntity<List<Subject>> findByProfessorId(long id) {
+        log.info("Finding all subjects by professor id {}", id);
+        try {
+            return new ResponseEntity<>(subjectRepository.findAllByProfessor(professorRepository.findById(id).get()), HttpStatus.OK);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return new ResponseEntity<>(new ArrayList<>(), HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
     private Subject getSubjectFromMap(Map<String, String> requestMap) throws ParseException {
         final Subject subject = new Subject();
 
