@@ -31,14 +31,14 @@ public class Grade implements Serializable {
     @Column(name = "n2")
     private float n2;
 
-    @Column(name = "test1", columnDefinition = "bytea")
+    @Column(name = "test1", columnDefinition = "text")
     private String test1;
 
-    @Column(name = "test2", columnDefinition = "bytea")
+    @Column(name = "test2", columnDefinition = "text")
     private String test2;
 
     @JsonIgnore
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "student_id", nullable = false)
     private Student student;
 

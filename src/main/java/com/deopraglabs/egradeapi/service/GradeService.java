@@ -57,8 +57,7 @@ public class GradeService {
     public ResponseEntity<String> update(Map<String, String> requestMap) {
         log.info("Updating grade {}");
         try {
-            final Grade grade = getGradeFromMap(requestMap);
-            grade.setId(Long.parseLong(requestMap.get("id")));
+            final Grade grade = updateGradeFromMap(requestMap);
             gradeRepository.save(grade);
             return EGradeUtils.getResponseEntity(Constants.SUCCESS, HttpStatus.OK);
         } catch (ParseException e) {
@@ -81,10 +80,35 @@ public class GradeService {
     private Grade getGradeFromMap(Map<String, String> requestMap) throws ParseException {
         final Grade grade = new Grade();
 
+        grade.setId(Long.parseLong(requestMap.get("id")));
         grade.setSubject(subjectRepository.findById(Long.parseLong(requestMap.get("subject_id"))).get());
         grade.setStudent(studentRepository.findById(Long.parseLong(requestMap.get("student_id"))).get());
         grade.setN1(Float.parseFloat(requestMap.get("n1")));
         grade.setN2(Float.parseFloat(requestMap.get("n2")));
+        if(requestMap.get("test1") != null && !requestMap.get("test1").isEmpty()) {
+            grade.setTest1(requestMap.get("test1"));
+        }
+        if(requestMap.get("test2") != null && !requestMap.get("test2").isEmpty()) {
+            grade.setTest1(requestMap.get("test2"));
+        }
+
+        return grade;
+    }
+
+
+    private Grade updateGradeFromMap(Map<String, String> requestMap) throws ParseException {
+        final Grade grade = new Grade();
+
+        grade.setSubject(subjectRepository.findById(Long.parseLong(requestMap.get("subject_id"))).get());
+        grade.setStudent(studentRepository.findById(Long.parseLong(requestMap.get("student_id"))).get());
+        grade.setN1(Float.parseFloat(requestMap.get("n1")));
+        grade.setN2(Float.parseFloat(requestMap.get("n2")));
+        if(requestMap.get("test1") != null && !requestMap.get("test1").isEmpty()) {
+            grade.setTest1(requestMap.get("test1"));
+        }
+        if(requestMap.get("test2") != null && !requestMap.get("test2").isEmpty()) {
+            grade.setTest1(requestMap.get("test2"));
+        }
 
         return grade;
     }
