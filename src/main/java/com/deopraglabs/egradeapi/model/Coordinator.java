@@ -9,6 +9,7 @@ import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 
 import java.io.Serial;
+import java.io.Serializable;
 import java.util.List;
 
 @Data
@@ -17,7 +18,7 @@ import java.util.List;
 @DynamicUpdate
 @Entity
 @Table(name = "coordinator")
-public class Coordinator extends User {
+public class Coordinator extends User implements Serializable {
 
     @Serial
     private static final long serialVersionUID = 1L;
