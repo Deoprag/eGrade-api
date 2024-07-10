@@ -127,6 +127,11 @@ public class EGradeUtils {
         return formatter.parse(stringDate);
     }
 
+    public static Date stringToDate2(String stringDate) throws ParseException {
+        final SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
+        return formatter.parse(stringDate);
+    }
+
     public static LocalDateTime stringToLocalDateTime(String stringLocalDateTime) throws ParseException {
         final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSSX");
         final LocalDateTime localDateTime = LocalDateTime.parse(stringLocalDateTime, formatter);

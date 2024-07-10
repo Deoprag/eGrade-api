@@ -77,10 +77,19 @@ public class GradeService {
         return new ResponseEntity<>(new Grade(), HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
+    public ResponseEntity<List<Grade>> findAll() {
+        log.info("Finding all grades");
+        try {
+            return new ResponseEntity<>(gradeRepository.findAll(), HttpStatus.OK);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return new ResponseEntity<>(new ArrayList<>(), HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
     private Grade getGradeFromMap(Map<String, String> requestMap) throws ParseException {
         final Grade grade = new Grade();
 
-        grade.setId(Long.parseLong(requestMap.get("id")));
         grade.setSubject(subjectRepository.findById(Long.parseLong(requestMap.get("subject_id"))).get());
         grade.setStudent(studentRepository.findById(Long.parseLong(requestMap.get("student_id"))).get());
         grade.setN1(Float.parseFloat(requestMap.get("n1")));

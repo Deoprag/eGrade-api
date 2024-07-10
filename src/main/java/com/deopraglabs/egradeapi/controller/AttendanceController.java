@@ -72,4 +72,24 @@ public class AttendanceController {
         return new ResponseEntity<>(new ArrayList<>(), HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
+    @GetMapping("/findBySubjectId/{id}")
+    public ResponseEntity<List<Attendance>> findBySubjectId(@PathVariable long id) {
+        try {
+            return attendanceService.findBySubjectId(id);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return new ResponseEntity<>(new ArrayList<>(), HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    @GetMapping("/findByDate/{date}")
+    public ResponseEntity<List<Attendance>> findByDate(@PathVariable String date) {
+        try {
+            return attendanceService.findByDate(date);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return new ResponseEntity<>(new ArrayList<>(), HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
 }

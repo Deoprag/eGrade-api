@@ -4,6 +4,7 @@ import com.deopraglabs.egradeapi.model.Gender;
 import com.deopraglabs.egradeapi.model.Student;
 import com.deopraglabs.egradeapi.model.Subject;
 import com.deopraglabs.egradeapi.repository.CourseRepository;
+import com.deopraglabs.egradeapi.repository.GradeRepository;
 import com.deopraglabs.egradeapi.repository.StudentRepository;
 import com.deopraglabs.egradeapi.repository.SubjectRepository;
 import com.deopraglabs.egradeapi.util.Constants;
@@ -29,6 +30,9 @@ public class StudentService {
 
     @Autowired
     SubjectRepository subjectRepository;
+
+    @Autowired
+    GradeRepository gradeRepository;
 
     public ResponseEntity<Student> login(Map<String, String> requestMap) {
         log.info("Logging in student {}");
@@ -181,6 +185,16 @@ public class StudentService {
                 }
             }
             return new ResponseEntity<>(studentList, HttpStatus.OK);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    public ResponseEntity<Student> findByGrade(long gradeId) {
+        log.info("Finding student by grade");
+        try {
+            return new ResponseEntity<>(studentRepository.findByGrades(gradeRepository.findById(gradeId).get()), HttpStatus.OK);
         } catch (Exception e) {
             e.printStackTrace();
         }

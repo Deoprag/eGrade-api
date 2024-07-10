@@ -1,6 +1,7 @@
 package com.deopraglabs.egradeapi.repository;
 
 import com.deopraglabs.egradeapi.model.Course;
+import com.deopraglabs.egradeapi.model.Grade;
 import com.deopraglabs.egradeapi.model.Student;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
@@ -22,4 +23,6 @@ public interface StudentRepository extends JpaRepository<Student, Long> {
     public List<Student> findAll();
 
     public List<Student> findAllByCourse(Course course);
+
+    public Student findByGrades(Grade grade);
 }

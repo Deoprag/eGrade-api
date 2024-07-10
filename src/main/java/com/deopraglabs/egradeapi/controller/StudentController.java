@@ -53,6 +53,17 @@ public class StudentController {
         }
     }
 
+    @GetMapping("/findByGrade/{id}")
+    public ResponseEntity<Student> findByGrade(@PathVariable Long id) {
+        try {
+            return studentService.findByGrade(id);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return new ResponseEntity<>(new Student(), HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+
     @GetMapping("/findById/{id}")
     public ResponseEntity<Student> findById(@PathVariable Long id) {
         try {

@@ -2,6 +2,7 @@ package com.deopraglabs.egradeapi.service;
 
 import com.deopraglabs.egradeapi.model.Attendance;
 import com.deopraglabs.egradeapi.model.Student;
+import com.deopraglabs.egradeapi.model.Subject;
 import com.deopraglabs.egradeapi.repository.AttendanceRepository;
 import com.deopraglabs.egradeapi.repository.StudentRepository;
 import com.deopraglabs.egradeapi.repository.SubjectRepository;
@@ -81,8 +82,8 @@ public class AttendanceService {
 
         attendance.setDate(Date.from(Instant.now()));
         attendance.setPresent(Boolean.parseBoolean(requestMap.get("present")));
-        attendance.setSubject(subjectRepository.findById(Long.parseLong(requestMap.get("subject_id"))).get());
-        attendance.setStudent(studentRepository.findById(Long.parseLong(requestMap.get("student_id"))).get());
+        attendance.setSubject(subjectRepository.findById(Long.parseLong(requestMap.get("subjectId"))).get());
+        attendance.setStudent(studentRepository.findById(Long.parseLong(requestMap.get("studentId"))).get());
 
         return attendance;
     }
@@ -97,6 +98,33 @@ public class AttendanceService {
             } else {
                 return new ResponseEntity<>(new ArrayList<>(), HttpStatus.BAD_REQUEST);
             }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return new ResponseEntity<>(new ArrayList<>(), HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    public ResponseEntity<List<Attendance>> findBySubjectId(long subjectId) {
+        log.info("Finding attendance by subjectId id {}", subjectId);
+        try {
+            final Optional<Subject> subject = subjectRepository.findById(subjectId);
+
+            if (subject.isPresent()) {
+                return new ResponseEntity<>(attendanceRepository.findBySubject(subject.get()), HttpStatus.OK);
+            } else {
+                return new ResponseEntity<>(new ArrayList<>(), HttpStatus.BAD_REQUEST);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return new ResponseEntity<>(new ArrayList<>(), HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+
+    public ResponseEntity<List<Attendance>> findByDate(String date) {
+        log.info("Finding attendance by subjectId date {}", date);
+        try {
+            return new ResponseEntity<>(attendanceRepository.findByDate(EGradeUtils.stringToDate2(date)), HttpStatus.OK);
         } catch (Exception e) {
             e.printStackTrace();
         }

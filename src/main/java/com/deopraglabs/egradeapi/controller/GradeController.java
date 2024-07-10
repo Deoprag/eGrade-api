@@ -63,6 +63,16 @@ public class GradeController {
         return new ResponseEntity<>(new Grade(), HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
+    @GetMapping("/findAll")
+    public ResponseEntity<List<Grade>> findAll() {
+        try {
+            return gradeService.findAll();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return new ResponseEntity<>(new ArrayList<>(), HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
     @GetMapping("/findByStudentId/{id}")
     public ResponseEntity<List<Grade>> findByStudentId(@PathVariable long id) {
         try {
